@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@/app/lib/prisma";
 
-export const authOptions = {
+const authOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
@@ -23,13 +23,7 @@ export const authOptions = {
         return null;
       }
     })
-  ],
-  callbacks: {
-    async session({ session, user }: { session: Record<string, any>, user: Record<string, any> }) {
-      session.user.role = user.role;
-      return session;
-    }
-  }
+  ]
 };
 
 const handler = NextAuth(authOptions);
