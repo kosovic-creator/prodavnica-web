@@ -1,6 +1,11 @@
+"use client"
 import Image from "next/image";
+import { useState } from "react";
+import { Button } from "../components/ui/button";
 
 export default function Home() {
+  const [count, setCount] = useState(0);
+
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
@@ -98,6 +103,12 @@ export default function Home() {
           Go to nextjs.org →
         </a>
       </footer>
+      <main className="flex flex-col items-center justify-center min-h-screen p-4">
+        <h1 className="text-3xl font-bold mb-4">Web Shop Example</h1>
+        <Button onClick={() => setCount(count + 1)}>
+          Dodaj u korpu ({count})
+        </Button>
+      </main>
     </div>
   );
 }
