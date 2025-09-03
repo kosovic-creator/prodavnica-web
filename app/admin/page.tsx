@@ -47,6 +47,8 @@ export default function AdminPage() {
     image: "",
   });
   const [editingProduct, setEditingProduct] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -117,9 +119,22 @@ export default function AdminPage() {
     setError("");
 
     try {
+      let imageUrl = productForm.image;
+
+      // Upload image if a file is selected
+      if (selectedFile) {
+        const uploadedImageUrl = await uploadImage(selectedFile);
+        if (uploadedImageUrl) {
+          imageUrl = uploadedImageUrl;
+        } else {
+          return; // Upload failed, don't proceed
+        }
+      }
+
       const productData = {
         ...productForm,
         price: parseFloat(productForm.price),
+        image: imageUrl,
       };
 
       const url = editingProduct ? `/api/products/${editingProduct}` : "/api/products";
@@ -134,6 +149,7 @@ export default function AdminPage() {
       if (response.ok) {
         setProductForm({ name: "", price: "", image: "" });
         setEditingProduct(null);
+        setSelectedFile(null);
         fetchProducts();
       } else {
         const data = await response.json();
@@ -198,6 +214,42 @@ export default function AdminPage() {
     setProductForm({ name: "", price: "", image: "" });
     setEditingUser(null);
     setEditingProduct(null);
+    setSelectedFile(null);
+  };
+
+  // Upload image function
+  const uploadImage = async (file: File): Promise<string | null> => {
+    setUploadingImage(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return data.imageUrl;
+      } else {
+        const errorData = await response.json();
+        setError(`Greška pri uploadu slike: ${errorData.error}`);
+        return null;
+      }
+    } catch {
+      setError("Greška pri uploadu slike");
+      return null;
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+    }
   };
 
   if (status === "loading") {
@@ -402,7 +454,7 @@ export default function AdminPage() {
                 {editingProduct ? "Uredi proizvod" : "Dodaj novi proizvod"}
               </h2>
               <form onSubmit={handleProductSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <input
                     type="text"
                     placeholder="Naziv proizvoda"
@@ -420,26 +472,83 @@ export default function AdminPage() {
                     className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     required
                   />
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Slika proizvoda
+                    </label>
+                    <div className="space-y-2">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileSelect}
+                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                      />
+                      {selectedFile && (
+                        <p className="text-sm text-gray-600">
+                          Izabran fajl: {selectedFile.name}
+                        </p>
+                      )}
+                      {uploadingImage && (
+                        <p className="text-sm text-blue-600">
+                          Upload u toku...
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="text-center text-gray-500">ili</div>
+                  
                   <input
                     type="url"
-                    placeholder="URL slike (opciono)"
+                    placeholder="URL slike (alternativno)"
                     value={productForm.image}
                     onChange={(e) => setProductForm({ ...productForm, image: e.target.value })}
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
+                  
+                  {productForm.image && (
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-600 mb-2">Pregled slike:</p>
+                      <Image
+                        src={productForm.image}
+                        alt="Preview"
+                        width={200}
+                        height={150}
+                        className="object-cover rounded-md border"
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="flex space-x-2">
                   <button
                     type="submit"
-                    className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
+                    disabled={uploadingImage}
+                    className={`px-4 py-2 rounded-md text-white ${
+                      uploadingImage 
+                        ? "bg-gray-400 cursor-not-allowed" 
+                        : "bg-indigo-600 hover:bg-indigo-700"
+                    }`}
                   >
-                    {editingProduct ? "Ažuriraj" : "Dodaj"}
+                    {uploadingImage 
+                      ? "Upload u toku..." 
+                      : editingProduct 
+                        ? "Ažuriraj" 
+                        : "Dodaj"
+                    }
                   </button>
                   {editingProduct && (
                     <button
                       type="button"
                       onClick={cancelEdit}
-                      className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+                      disabled={uploadingImage}
+                      className={`px-4 py-2 rounded-md text-white ${
+                        uploadingImage 
+                          ? "bg-gray-400 cursor-not-allowed" 
+                          : "bg-gray-500 hover:bg-gray-600"
+                      }`}
                     >
                       Otkaži
                     </button>
