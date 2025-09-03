@@ -45,18 +45,16 @@ export const authOptions = {
     })
   ],
   session: {
-    strategy: "jwt" as const,
+    strategy: "jwt" as 'jwt',
   },
   callbacks: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async jwt({ token, user }: any) {
+    async jwt({ token, user }) {
       if (user) {
         token.role = user.role;
       }
       return token;
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async session({ session, token }: any) {
+    async session({ session, token }) {
       if (token) {
         session.user.id = token.sub;
         session.user.role = token.role;
@@ -70,5 +68,4 @@ export const authOptions = {
 };
 
 const handler = NextAuth(authOptions);
-
 export { handler as GET, handler as POST };
