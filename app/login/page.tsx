@@ -1,25 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, Suspense } from "react";
 import { signIn, getSession } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import LoginMessage from "../../components/LoginMessage";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    const message = searchParams.get("message");
-    if (message === "Registration successful") {
-      setSuccess("Registracija je uspešna! Sada se možete prijaviti.");
-    }
-  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,9 +104,9 @@ export default function LoginPage() {
             <div className="text-red-600 text-sm text-center">{error}</div>
           )}
 
-          {success && (
-            <div className="text-green-600 text-sm text-center">{success}</div>
-          )}
+          <Suspense fallback={<div></div>}>
+            <LoginMessage />
+          </Suspense>
 
           <div>
             <button
