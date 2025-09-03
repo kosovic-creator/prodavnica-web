@@ -2,9 +2,11 @@
 
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
+import { useCart } from "./CartContext";
 
 export default function Navigation() {
   const { data: session, status } = useSession();
+  const { cart } = useCart();
 
   const handleLogout = async () => {
     await signOut({ callbackUrl: "/" });
@@ -37,12 +39,6 @@ export default function Navigation() {
             <Link href="/" className="text-xl font-bold text-gray-800 mr-8">
               Prodavnica
             </Link>
-            <Link
-              href="/products"
-              className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
-            >
-              Proizvodi
-            </Link>
           </div>
           <div className="flex items-center space-x-4">
             {session ? (
@@ -50,6 +46,23 @@ export default function Navigation() {
                 <span className="text-gray-700">
                   Dobrodošli, {session.user?.name || session.user?.email}
                 </span>
+                <Link
+                  href="/products"
+                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
+                >
+                  Proizvodi
+                </Link>
+                <Link
+                  href="/cart"
+                  className="relative text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
+                >
+                  Korpa
+                  {cart.itemCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {cart.itemCount}
+                    </span>
+                  )}
+                </Link>
                 <Link
                   href="/admin"
                   className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"

@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 import Navigation from "../../components/Navigation";
+import { useCart } from "../../components/CartContext";
 
 interface Product {
   id: string;
@@ -14,9 +16,12 @@ interface Product {
 }
 
 export default function ProductsPage() {
+  const { data: session } = useSession();
+  const { addToCart } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [addingToCart, setAddingToCart] = useState<string | null>(null);
 
   useEffect(() => {
     fetchProducts();
@@ -35,6 +40,17 @@ export default function ProductsPage() {
       setError("Greška pri učitavanju proizvoda");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAddToCart = async (productId: string) => {
+    try {
+      setAddingToCart(productId);
+      await addToCart(productId, 1);
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    } finally {
+      setAddingToCart(null);
     }
   };
 
@@ -87,8 +103,12 @@ export default function ProductsPage() {
                   <p className="text-2xl font-bold text-green-600 mb-4">
                     {product.price.toFixed(2)} RSD
                   </p>
-                  <button className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200">
-                    Dodaj u korpu
+                  <button 
+                    onClick={() => handleAddToCart(product.id)}
+                    disabled={addingToCart === product.id}
+                    className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {addingToCart === product.id ? "Dodajem..." : "Dodaj u korpu"}
                   </button>
                 </div>
               </div>
