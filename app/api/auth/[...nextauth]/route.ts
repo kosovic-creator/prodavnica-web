@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "../../../lib/prisma";
 import bcrypt from "bcryptjs";
 
-const handler = NextAuth({
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -13,12 +13,12 @@ const handler = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials) return null;
-        
+
         try {
           const user = await prisma.user.findUnique({
             where: { email: credentials.email }
           });
-          
+
           if (!user) {
             throw new Error("Korisnik sa ovom email adresom ne postoji");
           }
@@ -26,7 +26,7 @@ const handler = NextAuth({
           if (!user.emailVerified) {
             throw new Error("Email adresa nije verifikovana. Proverite vaš email za link za potvrdu.");
           }
-          
+
           if (await bcrypt.compare(credentials.password, user.password)) {
             return {
               id: user.id,
@@ -45,7 +45,7 @@ const handler = NextAuth({
     })
   ],
   session: {
-    strategy: "jwt",
+    strategy: "jwt" as const,
   },
   callbacks: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -67,6 +67,8 @@ const handler = NextAuth({
   pages: {
     signIn: "/login",
   },
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

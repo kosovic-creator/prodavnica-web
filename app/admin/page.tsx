@@ -24,10 +24,33 @@ interface Product {
   updatedAt: string;
 }
 
+interface Order {
+  id: string;
+  total: number;
+  status: string;
+  createdAt: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  orderItems: {
+    id: string;
+    quantity: number;
+    price: number;
+    product: {
+      id: string;
+      name: string;
+      image?: string;
+    };
+  }[];
+}
+
 export default function AdminPage() {
   const { data: session, status } = useSession();
-  const [activeTab, setActiveTab] = useState<"users" | "products">("users");
+  const [activeTab, setActiveTab] = useState<"users" | "products" | "orders">("users");
   const [users, setUsers] = useState<User[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -55,6 +78,7 @@ export default function AdminPage() {
     if (status === "authenticated") {
       fetchUsers();
       fetchProducts();
+      fetchOrders();
     }
   }, [status]);
 
@@ -85,6 +109,20 @@ export default function AdminPage() {
       }
     } catch {
       setError("Greška pri učitavanju proizvoda");
+    }
+  };
+
+  const fetchOrders = async () => {
+    try {
+      const response = await fetch("/api/orders?admin=true");
+      if (response.ok) {
+        const data = await response.json();
+        setOrders(data);
+      } else {
+        setError("Greška pri učitavanju porudžbina");
+      }
+    } catch {
+      setError("Greška pri učitavanju porudžbina");
     }
   };
 
@@ -311,6 +349,16 @@ export default function AdminPage() {
             }`}
           >
             Proizvodi
+          </button>
+          <button
+            onClick={() => setActiveTab("orders")}
+            className={`px-4 py-2 rounded-md font-medium ${
+              activeTab === "orders"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            }`}
+          >
+            Porudžbine
           </button>
         </div>
 
@@ -616,6 +664,88 @@ export default function AdminPage() {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Orders Tab */}
+        {activeTab === "orders" && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-xl font-semibold mb-4">Lista porudžbina</h2>
+              {loading ? (
+                <div className="p-6">Učitavam porudžbine...</div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          ID
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Korisnik
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Ukupno
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Kreirano
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Akcije
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {orders.map((order) => (
+                        <tr key={order.id}>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {order.id}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {order.user.name} ({order.user.email})
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {order.total.toFixed(2)} RSD
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <span className={`px-2 py-1 rounded-full text-xs ${
+                              order.status === 'completed' 
+                                ? 'bg-green-100 text-green-800' 
+                                : order.status === 'pending'
+                                ? 'bg-yellow-100 text-yellow-800'
+                                : 'bg-red-100 text-red-800'
+                            }`}>
+                              {order.status}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {new Date(order.createdAt).toLocaleDateString()}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                            <button
+                              onClick={() => {}}
+                              className="text-indigo-600 hover:text-indigo-900"
+                            >
+                              Prikaži
+                            </button>
+                            <button
+                              onClick={() => {}}
+                              className="text-red-600 hover:text-red-900"
+                            >
+                              Obriši
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </div>
         )}

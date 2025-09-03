@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import Navigation from "../../components/Navigation";
@@ -8,7 +10,39 @@ import { useCart } from "../../components/CartContext";
 
 export default function CartPage() {
   const { data: session } = useSession();
-  const { cart, loading, updateQuantity, removeFromCart } = useCart();
+  const { cart, loading, updateQuantity, removeFromCart, refreshCart } = useCart();
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [checkoutError, setCheckoutError] = useState("");
+  const router = useRouter();
+
+  const handleCheckout = async () => {
+    setIsCheckingOut(true);
+    setCheckoutError("");
+
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Refresh cart to clear items
+        await refreshCart();
+        // Redirect to orders page or show success message
+        router.push("/orders?success=true");
+      } else {
+        setCheckoutError(data.error || "Greška pri kreiranju porudžbine");
+      }
+    } catch {
+      setCheckoutError("Greška pri kreiranju porudžbine");
+    } finally {
+      setIsCheckingOut(false);
+    }
+  };
 
   const handleQuantityChange = async (itemId: string, newQuantity: number) => {
     if (newQuantity < 1) return;
@@ -150,9 +184,18 @@ export default function CartPage() {
                     <span>{cart.total.toFixed(2)} RSD</span>
                   </div>
                 </div>
-                <button className="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 transition duration-200 font-semibold">
-                  Nastavite ka plaćanju
+                <button
+                  onClick={handleCheckout}
+                  className="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 transition duration-200 font-semibold"
+                  disabled={isCheckingOut}
+                >
+                  {isCheckingOut ? "Obrada..." : "Nastavite ka plaćanju"}
                 </button>
+                {checkoutError && (
+                  <div className="text-red-600 text-sm mt-2 text-center">
+                    {checkoutError}
+                  </div>
+                )}
                 <Link
                   href="/products"
                   className="block w-full text-center bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition duration-200 mt-2"

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../lib/prisma";
 import bcrypt from "bcryptjs";
 import { getServerSession } from "next-auth/next";
+import { authOptions } from "../../auth/[...nextauth]/route";
 
 // GET - Fetch single user
 export async function GET(
@@ -9,8 +10,8 @@ export async function GET(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession();
-    
+      const session = await getServerSession(authOptions);
+
     if (!session) {
       return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
     }
@@ -46,8 +47,8 @@ export async function PUT(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession();
-    
+      const session = await getServerSession(authOptions);
+
     if (!session) {
       return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
     }
@@ -61,7 +62,7 @@ export async function PUT(
       password?: string;
       role?: string;
     } = {};
-    
+
     if (name) updateData.name = name;
     if (email) updateData.email = email;
     if (role) updateData.role = role;
@@ -95,8 +96,8 @@ export async function DELETE(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession();
-    
+      const session = await getServerSession(authOptions);
+
     if (!session) {
       return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
     }

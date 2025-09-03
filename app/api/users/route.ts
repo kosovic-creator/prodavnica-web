@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../lib/prisma";
 import bcrypt from "bcryptjs";
 import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]/route";
 
 // GET - Fetch all users (admin only)
 export async function GET() {
   try {
-    const session = await getServerSession();
-    
+      const session = await getServerSession(authOptions);
+
     if (!session) {
       return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
     }

@@ -3,11 +3,12 @@ import { writeFile } from "fs/promises";
 import { existsSync, mkdirSync } from "fs";
 import { join } from "path";
 import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession();
-    
+      const session = await getServerSession(authOptions);
+
     if (!session) {
       return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
     }
@@ -22,16 +23,16 @@ export async function POST(request: NextRequest) {
     // Validate file type
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
-      return NextResponse.json({ 
-        error: "Nije dozvoljen tip fajla. Dozvoljeni su: JPEG, PNG, WebP" 
+        return NextResponse.json({
+            error: "Nije dozvoljen tip fajla. Dozvoljeni su: JPEG, PNG, WebP"
       }, { status: 400 });
     }
 
     // Validate file size (5MB max)
     const maxSize = 5 * 1024 * 1024; // 5MB
     if (file.size > maxSize) {
-      return NextResponse.json({ 
-        error: "Fajl je prevelik. Maksimalna veličina je 5MB" 
+        return NextResponse.json({
+            error: "Fajl je prevelik. Maksimalna veličina je 5MB"
       }, { status: 400 });
     }
 
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest) {
     // Generate unique filename
     const timestamp = Date.now();
     const fileName = `${timestamp}-${file.name}`;
-    
+
     // Save to public/uploads directory
     const uploadDir = join(process.cwd(), 'public', 'uploads');
     const filePath = join(uploadDir, fileName);
@@ -56,7 +57,7 @@ export async function POST(request: NextRequest) {
     // Return the public URL
     const imageUrl = `/uploads/${fileName}`;
 
-    return NextResponse.json({ 
+      return NextResponse.json({
       message: "Fajl je uspešno uploadan",
       imageUrl: imageUrl,
       fileName: fileName
@@ -64,8 +65,8 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error("Error uploading file:", error);
-    return NextResponse.json({ 
-      error: "Greška pri uploadu fajla" 
+      return NextResponse.json({
+          error: "Greška pri uploadu fajla"
     }, { status: 500 });
   }
 }
