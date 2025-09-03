@@ -34,8 +34,14 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-gray-800">
+            <Link href="/" className="text-xl font-bold text-gray-800 mr-8">
               Prodavnica
+            </Link>
+            <Link
+              href="/products"
+              className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
+            >
+              Proizvodi
             </Link>
           </div>
           <div className="flex items-center space-x-4">
@@ -44,6 +50,12 @@ export default function Navigation() {
                 <span className="text-gray-700">
                   Dobrodošli, {session.user?.name || session.user?.email}
                 </span>
+                <Link
+                  href="/admin"
+                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
+                >
+                  Admin
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200"
