@@ -6,7 +6,7 @@ import { getServerSession } from "next-auth/next";
 // GET - Fetch single user
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession();
@@ -15,8 +15,10 @@ export async function GET(
       return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
     }
 
+    const { id } = await context.params;
+
     const user = await prisma.user.findUnique({
-      where: { id: params.id },
+      where: { id },
       select: {
         id: true,
         email: true,
@@ -41,7 +43,7 @@ export async function GET(
 // PUT - Update user
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession();
@@ -50,6 +52,7 @@ export async function PUT(
       return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
     }
 
+    const { id } = await context.params;
     const { name, email, password, role } = await request.json();
 
     const updateData: {
@@ -58,6 +61,7 @@ export async function PUT(
       password?: string;
       role?: string;
     } = {};
+    
     if (name) updateData.name = name;
     if (email) updateData.email = email;
     if (role) updateData.role = role;
@@ -66,7 +70,7 @@ export async function PUT(
     }
 
     const user = await prisma.user.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
       select: {
         id: true,
@@ -88,7 +92,7 @@ export async function PUT(
 // DELETE - Delete user
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession();
@@ -97,8 +101,10 @@ export async function DELETE(
       return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
     }
 
+    const { id } = await context.params;
+
     await prisma.user.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ message: "Korisnik je uspešno obrisan" });

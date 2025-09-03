@@ -5,11 +5,13 @@ import { getServerSession } from "next-auth/next";
 // GET - Fetch single product
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await context.params;
+    
     const product = await prisma.product.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!product) {
@@ -26,7 +28,7 @@ export async function GET(
 // PUT - Update product
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession();
@@ -35,6 +37,7 @@ export async function PUT(
       return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
     }
 
+    const { id } = await context.params;
     const { name, price, image } = await request.json();
 
     const updateData: {
@@ -56,7 +59,7 @@ export async function PUT(
     if (image !== undefined) updateData.image = image || null;
 
     const product = await prisma.product.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
     });
 
@@ -70,7 +73,7 @@ export async function PUT(
 // DELETE - Delete product
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession();
@@ -79,8 +82,10 @@ export async function DELETE(
       return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
     }
 
+    const { id } = await context.params;
+
     await prisma.product.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ message: "Proizvod je uspešno obrisan" });
