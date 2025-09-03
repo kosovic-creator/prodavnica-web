@@ -19,18 +19,27 @@ const handler = NextAuth({
             where: { email: credentials.email }
           });
           
-          if (user && await bcrypt.compare(credentials.password, user.password)) {
+          if (!user) {
+            throw new Error("Korisnik sa ovom email adresom ne postoji");
+          }
+
+          if (!user.emailVerified) {
+            throw new Error("Email adresa nije verifikovana. Proverite vaš email za link za potvrdu.");
+          }
+          
+          if (await bcrypt.compare(credentials.password, user.password)) {
             return {
               id: user.id,
               email: user.email,
               name: user.name,
               role: user.role,
             };
+          } else {
+            throw new Error("Neispravna lozinka");
           }
-          return null;
         } catch (error) {
           console.error("Auth error:", error);
-          return null;
+          throw error;
         }
       }
     })

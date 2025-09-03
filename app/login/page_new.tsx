@@ -135,18 +135,6 @@ function LoginForm() {
               {isLoading ? "Prijavljivam..." : "Prijavite se"}
             </button>
           </div>
-
-          <div className="text-center">
-            <p className="text-sm text-gray-600">
-              Niste dobili verifikacijski email?{" "}
-              <Link
-                href="/resend-verification"
-                className="font-medium text-indigo-600 hover:text-indigo-500"
-              >
-                Pošaljite ponovo
-              </Link>
-            </p>
-          </div>
         </form>
         </div>
       </div>

@@ -64,6 +64,12 @@ export default function Navigation() {
                   )}
                 </Link>
                 <Link
+                  href="/profile"
+                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
+                >
+                  Profil
+                </Link>
+                <Link
                   href="/admin"
                   className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
                 >
