@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "../../../lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
   try {
@@ -39,13 +39,13 @@ export async function GET(request: NextRequest) {
     // Redirect to success page or login
     const redirectUrl = new URL('/login', request.url);
     redirectUrl.searchParams.set('verified', 'true');
-    
+
     return NextResponse.redirect(redirectUrl);
 
   } catch (error) {
     console.error("Error verifying email:", error);
-    return NextResponse.json({ 
-      error: "Greška pri verifikaciji email-a" 
+    return NextResponse.json({
+      error: "Greška pri verifikaciji email-a"
     }, { status: 500 });
   }
 }

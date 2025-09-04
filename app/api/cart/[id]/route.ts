@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import prisma from "../../../lib/prisma";
+import prisma from "@/lib/prisma";
 import { authOptions } from "@/lib/authOptions";
 
 // PUT - Update cart item quantity

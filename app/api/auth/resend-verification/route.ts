@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "../../../lib/prisma";
-import { 
-  sendEmail, 
-  generateVerificationToken, 
+import prisma from "@/lib/prisma";
+import {
+  sendEmail,
+  generateVerificationToken,
   generateVerificationUrl,
   generateVerificationEmailHtml,
   generateVerificationEmailText
@@ -59,14 +59,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Greška pri slanju email-a" }, { status: 500 });
     }
 
-    return NextResponse.json({ 
-      message: "Verifikacijski email je ponovo poslat. Proverite vaš email." 
+    return NextResponse.json({
+      message: "Verifikacijski email je ponovo poslat. Proverite vaš email."
     });
 
   } catch (error) {
     console.error("Error resending verification email:", error);
-    return NextResponse.json({ 
-      error: "Greška servera" 
+    return NextResponse.json({
+      error: "Greška servera"
     }, { status: 500 });
   }
 }
