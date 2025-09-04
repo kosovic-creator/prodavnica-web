@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "../../../lib/prisma";
+import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 
 // GET - Fetch single product
@@ -9,7 +9,7 @@ export async function GET(
 ) {
   try {
     const { id } = await context.params;
-    
+
     const product = await prisma.product.findUnique({
       where: { id },
     });
@@ -32,7 +32,7 @@ export async function PUT(
 ) {
   try {
     const session = await getServerSession();
-    
+
     if (!session) {
       return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
     }
@@ -77,7 +77,7 @@ export async function DELETE(
 ) {
   try {
     const session = await getServerSession();
-    
+
     if (!session) {
       return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
     }
