@@ -3,7 +3,7 @@ import { writeFile } from "fs/promises";
 import { existsSync, mkdirSync } from "fs";
 import { join } from "path";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../../lib/authOptions";
+import { authOptions } from "@/lib/authOptions";;
 
 export async function POST(request: NextRequest) {
   try {
