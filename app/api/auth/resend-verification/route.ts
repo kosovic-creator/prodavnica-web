@@ -6,7 +6,7 @@ import {
   generateVerificationUrl,
   generateVerificationEmailHtml,
   generateVerificationEmailText
-} from "../../../../lib/email";
+} from "@/lib/email";
 
 export async function POST(request: NextRequest) {
   try {
