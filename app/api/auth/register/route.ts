@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "../../../lib/prisma";
+import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-import { 
-  sendEmail, 
-  generateVerificationToken, 
+import {
+  sendEmail,
+  generateVerificationToken,
   generateVerificationUrl,
   generateVerificationEmailHtml,
   generateVerificationEmailText
@@ -80,8 +80,8 @@ export async function POST(request: NextRequest) {
     const { password: _, emailVerifyToken, ...userWithoutSensitiveData } = user;
 
     return NextResponse.json(
-      { 
-        message: "Korisnik je uspešno registrovan. Proverite email za potvrdu.", 
+      {
+        message: "Korisnik je uspešno registrovan. Proverite email za potvrdu.",
         user: userWithoutSensitiveData,
         emailSent: emailResult.success
       },
