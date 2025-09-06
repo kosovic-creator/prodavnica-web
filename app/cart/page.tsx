@@ -200,7 +200,8 @@ export default function CartPage() {
                   href="/products"
                   className="block w-full text-center bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition duration-200 mt-2"
                 >
-                  Nastavi kupovinu
+                  {/* Nastavi kupovinu */}
+                  Završi kupovinu
                 </Link>
               </div>
             </div>
