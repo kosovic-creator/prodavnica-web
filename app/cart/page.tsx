@@ -189,7 +189,7 @@ export default function CartPage() {
                   className="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 transition duration-200 font-semibold"
                   disabled={isCheckingOut}
                 >
-                  {isCheckingOut ? "Obrada..." : "Nastavite ka plaćanju"}
+                  {isCheckingOut ? "Obrada..." : "Završi kupovinu"}
                 </button>
                 {checkoutError && (
                   <div className="text-red-600 text-sm mt-2 text-center">
@@ -200,8 +200,7 @@ export default function CartPage() {
                   href="/products"
                   className="block w-full text-center bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition duration-200 mt-2"
                 >
-                  {/* Nastavi kupovinu */}
-                  Završi kupovinu
+                  Nastavi kupovinu
                 </Link>
               </div>
             </div>
