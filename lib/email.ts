@@ -39,7 +39,7 @@ export function generateVerificationToken(): string {
 }
 
 export function generateVerificationUrl(token: string): string {
-  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3002';
+  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
   return `${baseUrl}/api/auth/verify-email?token=${token}`;
 }
 
@@ -97,18 +97,18 @@ export function generateVerificationEmailHtml(name: string, verificationUrl: str
       <div class="content">
         <h2>Zdravo ${name || 'Korisniče'}!</h2>
         <p>Hvala vam što ste se registrovali u našoj prodavnici. Da biste završili proces registracije, molimo vas da potvrdite vašu email adresu klikom na dugme ispod.</p>
-        
+
         <div style="text-align: center;">
           <a href="${verificationUrl}" class="button">Potvrdi email adresu</a>
         </div>
-        
+
         <p>Ili kopirajte i nalepite sledeći link u vaš browser:</p>
         <p style="word-break: break-all; background-color: #e5e7eb; padding: 10px; border-radius: 4px;">
           ${verificationUrl}
         </p>
-        
+
         <p><strong>Napomena:</strong> Ovaj link je valjan 24 sata. Ako ne potvrdite email u tom periodu, trebalo bi da se ponovo registrujete.</p>
-        
+
         <div class="footer">
           <p>Ako niste vi kreırali ovaj nalog, možete ignorisati ovaj email.</p>
           <p>© 2025 Prodavnica. Sva prava zadržana.</p>

@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 
 export default function Home() {
   const { data: session } = useSession();
-
+ console.log('to je :', process.env.EMAIL_PASS);
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />

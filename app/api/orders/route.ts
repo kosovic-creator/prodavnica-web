@@ -45,7 +45,7 @@ export async function POST() {
           status: "completed",
         },
       });
-
+      console.log('to je :', process.env.EMAIL_PASS);
       // Create order items
       const orderItems = await Promise.all(
         cartItems.map((cartItem) =>
@@ -141,9 +141,11 @@ export async function GET(request: NextRequest) {
       });
 
       return NextResponse.json(orders);
+
     }
   } catch (error) {
     console.error("Error fetching orders:", error);
     return NextResponse.json({ error: "Greška servera" }, { status: 500 });
   }
+  
 }
