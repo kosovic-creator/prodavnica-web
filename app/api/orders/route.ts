@@ -4,43 +4,7 @@ import { getServerSession } from "next-auth/next";
 import prisma from "@/lib/prisma";
 import { authOptions } from "@/lib/authOptions";
 import { sendOrderConfirmationEmail } from "@/controlers/orderController";
-// import nodemailer from 'nodemailer';
 
-
-// interface SendOrderConfirmationEmailOptions {
-//   userEmail: string;
-//   orderId: string | number;
-// }
-
-// interface MailOptions {
-//   from: string;
-//   to: string;
-//   subject: string;
-//   text: string;
-// }
-
-// async function sendOrderConfirmationEmail(
-//   userEmail: string,
-//   orderId: number
-// ): Promise<void> {
-//   const transporter = nodemailer.createTransport({
-//     service: 'gmail',
-//     auth: {
-//       user: 'drasko.kosovic@gmail.com',
-//       pass: 'dfhc myjw hdqp qznu'
-//     }
-//   });
-
-//   const mailOptions: MailOptions = {
-//     from: 'drasko.kosovic@gmail.com',
-//     to: userEmail,
-//     subject: 'Porudžbina uspešno dodata',
-//     text: `Vaša porudžbina #${orderId} je uspešno primljena. Hvala na kupovini!`
-
-//   };
-
-//   await transporter.sendMail(mailOptions);
-// }
 
 
 export async function POST() {

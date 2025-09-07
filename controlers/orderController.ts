@@ -6,8 +6,8 @@ export async function sendOrderConfirmationEmail(userEmail: string, orderId: num
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'drasko.kosovic@gmail.com',
-            pass: 'dfhc myjw hdqp qznu'
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
         }
     });
 
