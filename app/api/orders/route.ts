@@ -7,8 +7,8 @@ import nodemailer from 'nodemailer';
 
 
 interface SendOrderConfirmationEmailOptions {
-  userEmail: 'drasko.kosovic@gmail.com';
-  orderId: 10;
+  userEmail: string;
+  orderId: string | number;
 }
 
 interface MailOptions {
@@ -19,7 +19,7 @@ interface MailOptions {
 }
 
 async function sendOrderConfirmationEmail(
-  userEmail: 'drasko.kosovic@gmail.com',
+  userEmail: string,
   orderId: number
 ): Promise<void> {
   const transporter = nodemailer.createTransport({
@@ -32,7 +32,7 @@ async function sendOrderConfirmationEmail(
 
   const mailOptions: MailOptions = {
     from: 'drasko.kosovic@gmail.com',
-    to: 'drasko.kosovic@icloud.com',
+    to: userEmail,
     subject: 'Porudžbina uspešno dodata',
     text: `Vaša porudžbina #${orderId} je uspešno primljena. Hvala na kupovini!`
 
@@ -108,7 +108,7 @@ export async function POST() {
     });
 
     // Dodaj poziv funkcije ovdje:
-    await sendOrderConfirmationEmail(result.order.id, session.user.email);
+    await sendOrderConfirmationEmail(session.user.email, Number(result.order.id));
 
     return NextResponse.json({ message: "Porudžbina potvrđena", order: result.order });
 
