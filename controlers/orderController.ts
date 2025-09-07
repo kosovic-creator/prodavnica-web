@@ -12,7 +12,7 @@ export async function sendOrderConfirmationEmail(userEmail: string, orderId: num
     });
 
     const mailOptions = {
-        from: 'drasko.kosovic@gmail.com',
+        from: 'Prodavnica <' + process.env.EMAIL_USER + '>',
         to: userEmail,
         subject: 'Potvrda porudžbine',
         text: `Vaša porudžbina #${orderId} je potvrđena. Hvala na kupovini!`
