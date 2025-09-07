@@ -8,8 +8,6 @@ import Image from "next/image";
 import Link from "next/link";
 import Navigation from "../../components/Navigation";
 import { useCart } from "../../components/CartContext";
-// import nodemailer from 'nodemailer';
-// import { sendOrderConfirmationEmail } from '@/controlers/orderController';
 
 export default function CartPage() {
   const { data: session } = useSession();
@@ -18,24 +16,6 @@ export default function CartPage() {
   const [checkoutError, setCheckoutError] = useState("");
   const router = useRouter();
 
-  // async function sendOrderConfirmationEmail(userEmail: string, orderId: number) {
-  //     const transporter = nodemailer.createTransport({
-  //         service: 'gmail',
-  //         auth: {
-  //             user: 'drasko.kosovic@gmail.com',
-  //             pass: 'dfhc myjw hdqp qznu'
-  //         }
-  //     });
-
-  //     const mailOptions = {
-  //         from: 'drasko.kosovic@gmail.com',
-  //         to: userEmail,
-  //         subject: 'Potvrda porudžbine',
-  //         text: `Vaša porudžbina #${orderId} je potvrđena. Hvala na kupovini!`
-  //     };
-
-  //     await transporter.sendMail(mailOptions);
-  // }
 
   const handleCheckout = async () => {
     setIsCheckingOut(true);
@@ -55,8 +35,7 @@ export default function CartPage() {
         // Refresh cart to clear items
         await refreshCart();
         console.log('to je :', session?.user?.email, data.orderId);
-        // Optionally, you can send a confirmation email here by calling the function
-        // await sendOrderConfirmationEmail(session.user.email, data.orderId);
+      
         // Redirect to orders page or show success message
         router.push("/orders?success=true");
          console.log('to jedd :', session?.user?.email, data.orderId);

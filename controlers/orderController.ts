@@ -2,7 +2,7 @@
 import nodemailer from 'nodemailer';
 
 // Funkcija za slanje emaila
-async function sendOrderConfirmationEmail(userEmail: string, orderId: number) {
+export async function sendOrderConfirmationEmail(userEmail: string, orderId: number) {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
