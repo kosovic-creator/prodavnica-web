@@ -1,7 +1,46 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import prisma from "@/lib/prisma";
 import { authOptions } from "@/lib/authOptions";
+import nodemailer from 'nodemailer';
+
+
+interface SendOrderConfirmationEmailOptions {
+  userEmail: 'drasko.kosovic@gmail.com';
+  orderId: 10;
+}
+
+interface MailOptions {
+  from: string;
+  to: string;
+  subject: string;
+  text: string;
+}
+
+async function sendOrderConfirmationEmail(
+  userEmail: 'drasko.kosovic@gmail.com',
+  orderId: number
+): Promise<void> {
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'drasko.kosovic@gmail.com',
+      pass: 'dfhc myjw hdqp qznu'
+    }
+  });
+
+  const mailOptions: MailOptions = {
+    from: 'drasko.kosovic@gmail.com',
+    to: 'drasko.kosovic@icloud.com',
+    subject: 'Porudžbina uspešno dodata',
+    text: `Vaša porudžbina #${orderId} je uspešno primljena. Hvala na kupovini!`
+
+  };
+
+  await transporter.sendMail(mailOptions);
+}
+
 
 export async function POST() {
   try {
@@ -45,7 +84,7 @@ export async function POST() {
           status: "completed",
         },
       });
-      console.log('to je :', process.env.EMAIL_PASS);
+
       // Create order items
       const orderItems = await Promise.all(
         cartItems.map((cartItem) =>
@@ -54,7 +93,7 @@ export async function POST() {
               orderId: newOrder.id,
               productId: cartItem.productId,
               quantity: cartItem.quantity,
-              price: cartItem.product.price, // Save price at time of purchase
+              price: cartItem.product.price,
             },
           })
         )
@@ -68,11 +107,10 @@ export async function POST() {
       return { order: newOrder, orderItems };
     });
 
-    return NextResponse.json({
-      message: "Porudžbina je uspešno kreirana",
-      order: result.order,
-      orderItems: result.orderItems,
-    });
+    // Dodaj poziv funkcije ovdje:
+    await sendOrderConfirmationEmail(result.order.id, session.user.email);
+
+    return NextResponse.json({ message: "Porudžbina potvrđena", order: result.order });
 
   } catch (error) {
     console.error("Error creating order:", error);
@@ -118,6 +156,7 @@ export async function GET(request: NextRequest) {
       });
 
       return NextResponse.json(orders);
+
     } else {
       // Get orders for current user
       const user = await prisma.user.findUnique({
@@ -147,5 +186,5 @@ export async function GET(request: NextRequest) {
     console.error("Error fetching orders:", error);
     return NextResponse.json({ error: "Greška servera" }, { status: 500 });
   }
-  
+
 }

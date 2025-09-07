@@ -50,8 +50,11 @@ function OrdersContent() {
     try {
       const response = await fetch("/api/orders");
       if (response.ok) {
+
         const data = await response.json();
         setOrders(data);
+        console.log('porudzbine su :', data);
+
       } else {
         setError("Greška pri učitavanju porudžbina");
       }
@@ -149,8 +152,8 @@ function OrdersContent() {
                       {order.total.toFixed(2)} RSD
                     </p>
                     <span className={`inline-flex px-2 py-1 rounded-full text-xs font-semibold ${
-                      order.status === 'completed' 
-                        ? 'bg-green-100 text-green-800' 
+                      order.status === 'completed'
+                        ? 'bg-green-100 text-green-800'
                         : 'bg-yellow-100 text-yellow-800'
                     }`}>
                       {order.status === 'completed' ? 'Završeno' : order.status}
