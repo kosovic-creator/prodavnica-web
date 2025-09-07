@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Navigation from "../../components/Navigation";
 
+
 interface OrderItem {
   id: string;
   quantity: number;
