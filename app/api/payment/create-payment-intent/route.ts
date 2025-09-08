@@ -2,7 +2,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-const stripe = new Stripe('sk_test_51QzXjhGsYKIy68At7D8v49TucuCB1G0H8HIF9Pr6fnd4gelPTS8DsrHjPiYtCmomcHYRXKIyLztmTdv5eEUbUVFP006ubmRBuL', { apiVersion: '2025-08-27.basil' });
+const secretKey = process.env.SECRET_KEY;
+if (!secretKey) {
+  throw new Error('Stripe secret key is not defined in environment variables.');
+}
+const stripe = new Stripe(secretKey, { apiVersion: '2025-08-27.basil' });
 
 export async function POST(req: NextRequest) {
   const { amount, currency } = await req.json();
