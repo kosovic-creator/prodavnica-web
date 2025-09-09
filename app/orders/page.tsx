@@ -159,6 +159,15 @@ function OrdersContent() {
                     }`}>
                       {order.status === 'completed' ? 'Završeno' : order.status}
                     </span>
+                    {/* Dodaj dugme za plaćanje ako nije završeno */}
+                    {order.status !== 'completed' && (
+                      <Link
+                        href={`/placanje?orderId=${order.id}`}
+                        className="ml-4 bg-indigo-600 text-white px-4 py-1 rounded hover:bg-indigo-700"
+                      >
+                        Plati
+                      </Link>
+                    )}
                   </div>
                 </div>
 
