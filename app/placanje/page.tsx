@@ -1,6 +1,10 @@
-/* eslint-disable @typescript-eslint/prefer-as-const */
 'use client';
-import React, { useEffect, useState } from 'react';
+
+export const dynamic = "force-dynamic";
+/* eslint-disable @typescript-eslint/prefer-as-const */
+export const fetchCache = "force-no-store";
+
+import React, { Suspense, useEffect, useState } from 'react';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import CheckoutForm from '@/components/CheckoutForm';
@@ -8,7 +12,7 @@ import { useSearchParams } from 'next/navigation';
 
 const stripePromise = loadStripe('pk_test_51QzXjhGsYKIy68At6fXHC8XTKOsEwwPcC8M3bkQaaSFFmgSymnndIqk2ZJD8xEtNDWF2TdYPyfd6Ah7j0XYgKT1z005tFoGnFq'); // koristi svoj publishable key
 
-function PlacanjePage() {
+function PlacanjePageContent() {
   const [clientSecret, setClientSecret] = useState<string>('');
   const [orderAmount, setOrderAmount] = useState<number | null>(null);
   const searchParams = useSearchParams();
@@ -29,7 +33,7 @@ function PlacanjePage() {
       });
       const data = await paymentRes.json();
       setClientSecret(data.clientSecret);
-      console.log(data.clientSecret); // OVDE dodaj log
+      console.log(data.clientSecret);
     }
     if (orderId) {
       fetchOrderAndCreateIntent();
@@ -54,4 +58,10 @@ function PlacanjePage() {
   );
 }
 
-export default PlacanjePage;
+export default function PlacanjePage() {
+  return (
+    <Suspense fallback={<div>Učitavanje...</div>}>
+      <PlacanjePageContent />
+    </Suspense>
+  );
+}
