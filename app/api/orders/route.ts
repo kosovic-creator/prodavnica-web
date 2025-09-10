@@ -46,7 +46,7 @@ export async function POST() {
         data: {
           userId: user.id,
           total: total,
-          status: "completed",
+          status: "",
         },
       });
 
@@ -73,7 +73,7 @@ export async function POST() {
     });
 
     // Dodaj poziv funkcije ovdje:
- 
+
 await sendOrderConfirmationEmail(session.user.email, parseInt(result.order.id, 10));
 
     return NextResponse.json({ message: "Porudžbina potvrđena", order: result.order });
