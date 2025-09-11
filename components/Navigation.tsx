@@ -67,7 +67,7 @@ export default function Navigation() {
                 </Link>
                 <Link
                   href="/orders"
-                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
+                  className="hidden sm:block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
                 >
                   Porudžbine
                 </Link>
