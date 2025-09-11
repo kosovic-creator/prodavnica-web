@@ -3,6 +3,7 @@
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useCart } from "./CartContext";
+import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 
 export default function Navigation() {
   const { data: session, status } = useSession();
@@ -48,7 +49,7 @@ export default function Navigation() {
                 </span>
                 <Link
                   href="/products"
-                   className="hidden sm:block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
+                  className="hidden sm:block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
                 >
                   Proizvodi
                 </Link>
@@ -56,7 +57,7 @@ export default function Navigation() {
                   href="/cart"
                   className="relative text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
                 >
-                  Korpa
+                  <ShoppingCartIcon className="h-6 w-6" />
                   {cart.itemCount > 0 && (
                     <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                       {cart.itemCount}
@@ -78,7 +79,7 @@ export default function Navigation() {
                   </Link>
                   <Link
                     href="/admin"
-                     className="hidden sm:block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
+                    className="hidden sm:block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
                   >
                     Admin
                   </Link>
