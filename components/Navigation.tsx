@@ -31,6 +31,8 @@ export default function Navigation() {
     );
   }
 
+  const isLoggedIn = session;
+
   return (
     <nav className="bg-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4">
@@ -41,7 +43,7 @@ export default function Navigation() {
             </Link>
           </div>
           <div className="flex items-center space-x-4">
-            {session ? (
+            {isLoggedIn ? (
               <>
                 <span className="text-gray-700">
                   Dobrodošli, {session.user?.name || session.user?.email}
@@ -69,22 +71,10 @@ export default function Navigation() {
                 >
                   Porudžbine
                 </Link>
-                <div className="nav-buttons flex items-center gap-2">
-                  <Link
-                    href="/profile"
-                    className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
-                  >
-                    Profil
-                  </Link>
-                  <Link
-                    href="/admin"
-                    className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
-                  >
-                    Admin
-                  </Link>
+                <div className="nav-buttons flex items-center gap-2 flex-wrap max-w-full">
                   <button
                     onClick={handleLogout}
-                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200"
+                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200 text-sm sm:text-base"
                   >
                     Odjava
                   </button>
@@ -94,13 +84,13 @@ export default function Navigation() {
               <>
                 <Link
                   href="/login"
-                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
+                    className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200 text-sm sm:text-base"
                 >
                   Prijava
                 </Link>
                 <Link
                   href="/register"
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition duration-200"
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition duration-200 text-sm sm:text-base"
                 >
                   Registracija
                 </Link>
