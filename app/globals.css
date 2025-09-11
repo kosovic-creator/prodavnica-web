@@ -24,3 +24,15 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Dodaj media query za landscape na mobilnim uređajima */
+@media (max-width: 600px) and (orientation: landscape) {
+  .nav-buttons {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .nav-buttons > * {
+    font-size: 0.9rem;
+    padding: 0.25rem 0.5rem;
+  }
+}

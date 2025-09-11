@@ -69,24 +69,26 @@ export default function Navigation() {
                 >
                   Porudžbine
                 </Link>
-                <Link
-                  href="/profile"
-                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
-                >
-                  Profil
-                </Link>
-                <Link
-                  href="/admin"
-                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
-                >
-                  Admin
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200"
-                >
-                  Odjava
-                </button>
+                <div className="nav-buttons flex items-center gap-2">
+                  <Link
+                    href="/profile"
+                    className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
+                  >
+                    Profil
+                  </Link>
+                  <Link
+                    href="/admin"
+                    className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
+                  >
+                    Admin
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200"
+                  >
+                    Odjava
+                  </button>
+                </div>
               </>
             ) : (
               <>
