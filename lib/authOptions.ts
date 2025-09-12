@@ -19,7 +19,12 @@ const authOptions = {
           if (!user) throw new Error("Korisnik sa ovom email adresom ne postoji");
           if (!user.emailVerified) throw new Error("Email adresa nije verifikovana.");
           if (await bcrypt.compare(credentials.password, user.password)) {
-            return { id: user.id, email: user.email, name: user.name, role: user.role };
+            return {
+              id: user.id,
+              email: user.email,
+              name: user.name ?? undefined, // Ensure name is string | undefined
+              role: user.role
+            };
           } else {
             throw new Error("Neispravna lozinka");
           }
