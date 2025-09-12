@@ -7,6 +7,8 @@ import { useCart } from "./CartContext";
 import { ShoppingCartIcon, Bars3Icon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
+import { Session } from "next-auth";
+import { useTranslation } from "react-i18next";
 
 
 interface NavigationProps {
@@ -18,6 +20,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
   const { cart } = useCart();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const { i18n } = useTranslation();
 
   const handleLogout = async () => {
     await signOut({ callbackUrl: "/" });
@@ -38,6 +41,10 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
     e.preventDefault();
     // Dodaj logiku za pretragu proizvoda
     // npr. router.push(`/products?search=${search}`)
+  };
+
+  const handleLanguageChange = (lng: string) => {
+    i18n.changeLanguage(lng);
   };
 
   if (status === "loading") {
@@ -115,13 +122,24 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
           </>
         )}
       </div>
+      <div className="flex gap-2">
+        <button onClick={() => handleLanguageChange('en')} className="text-gray-700 hover:text-gray-900">
+          English
+        </button>
+        <button onClick={() => handleLanguageChange('sr')} className="text-gray-700 hover:text-gray-900">
+          Srpski
+        </button>
+      </div>
       {sidebarOpen && (
         <Sidebar
           onClose={() => setSidebarOpen(false)}
           isAuthenticated={!!session}
           handleLogout={handleLogout}
+          session={session}
         />
       )}
     </nav>
   );
 }
+
+

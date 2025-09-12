@@ -21,12 +21,14 @@
     "autoprefixer": "^10.4.21",
     "bcryptjs": "^3.0.2",
     "express": "^5.1.0",
+    "i18next": "^25.5.2",
     "next": "15.5.2",
     "next-auth": "^4.24.11",
     "nodemailer": "^6.10.1",
     "postcss": "^8.5.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-i18next": "^15.7.3",
     "stripe": "^18.5.0"
   },
   "devDependencies": {

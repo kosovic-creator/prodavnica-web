@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import Link from "next/link";
 import {
@@ -7,12 +8,28 @@ import {
   PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 import { Session } from "next-auth";
+import NextAuth from "next-auth";
+
+declare module "next-auth" {
+  interface User {
+    id: string;
+    role?: string;
+  }
+  interface Session {
+    user: {
+      id: string;
+      email: string;
+      name?: string;
+      role?: string;
+    };
+  }
+}
 
 interface SidebarProps {
   onClose: () => void;
   isAuthenticated: boolean;
   handleLogout: () => void;
-  session: Session;
+  session: Session | null;
 }
 
 export default function Sidebar({
