@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
+import '../i18n/i18n'; // Dodaj ovo na vrh fajla
 
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
@@ -20,7 +21,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
   const { cart } = useCart();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const handleLogout = async () => {
     await signOut({ callbackUrl: "/" });
@@ -44,7 +45,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
   };
 
   const handleLanguageChange = (lng: string) => {
-    i18n.changeLanguage(lng);
+    i18n.changeLanguage(lng); // Sada radi
   };
 
   if (status === "loading") {
@@ -77,7 +78,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
           <Bars3Icon className="h-8 w-8" />
         </button>
         <span className="text-gray-700">
-          Dobrodošli, {session?.user?.name || session?.user?.email}
+          {t('greeting', { name: session?.user?.name || session?.user?.email })}
         </span>
       </div>
       {/* Search bar sa ikonicom */}
