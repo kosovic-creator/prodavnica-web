@@ -97,12 +97,14 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
       <div className="flex items-center gap-4">
         {session ? (
           <>
-            <Link
-              href="/admin"
-              className="hidden sm:block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
-            >
-              Admin
-            </Link>
+            {session.user.role === 'admin' && (
+              <Link
+                href="/admin"
+                className="hidden sm:block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
+              >
+                Admin
+              </Link>
+            )}
             <Link
               href="/cart"
               className="relative text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
