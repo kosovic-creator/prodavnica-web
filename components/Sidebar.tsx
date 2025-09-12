@@ -1,12 +1,23 @@
 "use client";
 import Link from "next/link";
-import { UserIcon } from "@heroicons/react/24/outline";
+import {
+  UserIcon,
+  ArrowRightOnRectangleIcon,
+  ArrowLeftOnRectangleIcon,
+  PlusCircleIcon,
+} from "@heroicons/react/24/outline";
 
 interface SidebarProps {
   onClose: () => void;
+  isAuthenticated: boolean;
+  handleLogout: () => void;
 }
 
-export default function Sidebar({ onClose }: SidebarProps) {
+export default function Sidebar({
+  onClose,
+  isAuthenticated,
+  handleLogout,
+}: SidebarProps) {
   return (
     <div className="fixed top-0 left-0 h-full w-64 bg-white text-gray-900 flex flex-col shadow-lg z-50">
       <button
@@ -29,32 +40,59 @@ export default function Sidebar({ onClose }: SidebarProps) {
             </Link>
           </li>
           <li>
-            <a
+            <Link
               href="/products"
               className="hover:bg-gray-100 rounded px-3 py-2 block"
             >
               Proizvodi
-            </a>
+            </Link>
           </li>
-         
+
           <li>
-            <a
+            <Link
               href="/orders"
               className="hover:bg-gray-100 rounded px-3 py-2 block"
             >
               Porudžbine
-            </a>
+            </Link>
           </li>
           <li>
-            <a
+            <Link
               href="/profile"
               className="hover:bg-gray-100 rounded px-3 py-2 flex items-center gap-2"
             >
               <UserIcon className="h-5 w-5" />
-              {/* Profil */}
-            </a>
+            </Link>
           </li>
         </ul>
+        <div className="mt-8 flex flex-col gap-2">
+          {isAuthenticated ? (
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200"
+            >
+              <ArrowRightOnRectangleIcon className="h-5 w-5" />
+              {/* Odjava */}
+            </button>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="flex items-center gap-2 text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
+              >
+                <ArrowLeftOnRectangleIcon className="h-5 w-5" />
+                {/* Prijava */}
+              </Link>
+              <Link
+                href="/register"
+                className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition duration-200"
+              >
+                <PlusCircleIcon className="h-5 w-5" />
+                {/* Registracija */}
+              </Link>
+            </>
+          )}
+        </div>
       </nav>
     </div>
   );

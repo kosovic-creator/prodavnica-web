@@ -4,15 +4,20 @@
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useCart } from "./CartContext";
-import { ShoppingCartIcon, Bars3Icon } from "@heroicons/react/24/outline";
+import { ShoppingCartIcon, Bars3Icon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 
 
-export default function Navigation() {
+interface NavigationProps {
+  onSidebarChange?: (open: boolean) => void;
+}
+
+export default function Navigation({ onSidebarChange }: NavigationProps) {
   const { data: session, status } = useSession();
   const { cart } = useCart();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
   const handleLogout = async () => {
     await signOut({ callbackUrl: "/" });
@@ -23,8 +28,17 @@ export default function Navigation() {
     if (sidebarOpen) {
       timer = setTimeout(() => setSidebarOpen(false), 5000);
     }
+    if (onSidebarChange) {
+      onSidebarChange(sidebarOpen);
+    }
     return () => clearTimeout(timer);
-  }, [sidebarOpen]);
+  }, [sidebarOpen, onSidebarChange]);
+
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Dodaj logiku za pretragu proizvoda
+    // npr. router.push(`/products?search=${search}`)
+  };
 
   if (status === "loading") {
     return (
@@ -55,16 +69,26 @@ export default function Navigation() {
         >
           <Bars3Icon className="h-8 w-8" />
         </button>
-        <div className="text-xl font-bold">Prodavnica</div>
+        <span className="text-gray-700">
+          Dobrodošli, {session?.user?.name || session?.user?.email}
+        </span>
       </div>
-      {/* Ostali elementi navigacije */}
-      <div className="flex items-center space-x-4">
+      {/* Search bar sa ikonicom */}
+      <form onSubmit={handleSearch} className="flex-1 flex justify-center">
+        <div className="relative w-96">
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Pretraži proizvode..."
+            className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 pr-10"
+          />
+          <MagnifyingGlassIcon className="absolute right-3 top-2.5 h-5 w-5 text-gray-400 pointer-events-none" />
+        </div>
+      </form>
+      <div className="flex items-center gap-4">
         {session ? (
           <>
-            <span className="text-gray-700">
-              Dobrodošli, {session.user?.name || session.user?.email}
-            </span>
-
             <Link
               href="/admin"
               className="hidden sm:block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
@@ -72,41 +96,32 @@ export default function Navigation() {
               Admin
             </Link>
             <Link
-                  href="/cart"
-                  className="relative text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
-                >
-                  <ShoppingCartIcon className="h-6 w-6" />
-                  {cart.itemCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                      {cart.itemCount}
-                    </span>
-                  )}
-                </Link>
-            <button
-              onClick={handleLogout}
-              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200"
+              href="/cart"
+              className="relative text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
             >
-              Odjava
-            </button>
+              <ShoppingCartIcon className="h-6 w-6" />
+              {cart.itemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {cart.itemCount}
+                </span>
+              )}
+            </Link>
+
           </>
         ) : (
           <>
-            <Link
-              href="/login"
-              className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
-            >
-              Prijava
-            </Link>
-            <Link
-              href="/register"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition duration-200"
-            >
-              Registracija
-            </Link>
+
+
           </>
         )}
       </div>
-      {sidebarOpen && <Sidebar onClose={() => setSidebarOpen(false)} />}
+      {sidebarOpen && (
+        <Sidebar
+          onClose={() => setSidebarOpen(false)}
+          isAuthenticated={!!session}
+          handleLogout={handleLogout}
+        />
+      )}
     </nav>
   );
 }
