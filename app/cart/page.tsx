@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import Navigation from "../../components/Navigation";
 import { useCart } from "../../components/CartContext";
 
 export default function CartPage() {
@@ -35,7 +34,7 @@ export default function CartPage() {
         // Refresh cart to clear items
         await refreshCart();
         console.log('to je :', session?.user?.email, data.orderId);
-      
+
         // Redirect to orders page or show success message
         router.push("/orders?success=true");
          console.log('to jedd :', session?.user?.email, data.orderId);
@@ -61,7 +60,7 @@ export default function CartPage() {
   if (!session) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
+
         <div className="max-w-7xl mx-auto py-12 px-4">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-4">Vaša korpa</h1>
@@ -81,7 +80,7 @@ export default function CartPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
+
         <div className="flex items-center justify-center py-12">
           <div className="text-lg">Učitavam korpu...</div>
         </div>
@@ -91,7 +90,7 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
+     
       <div className="max-w-7xl mx-auto py-12 px-4">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Vaša korpa</h1>
 

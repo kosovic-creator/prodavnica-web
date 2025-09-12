@@ -1,17 +1,30 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useCart } from "./CartContext";
-import { ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { ShoppingCartIcon, Bars3Icon } from "@heroicons/react/24/outline";
+import { useState, useEffect } from "react";
+import Sidebar from "./Sidebar";
+
 
 export default function Navigation() {
   const { data: session, status } = useSession();
   const { cart } = useCart();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleLogout = async () => {
     await signOut({ callbackUrl: "/" });
   };
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    if (sidebarOpen) {
+      timer = setTimeout(() => setSidebarOpen(false), 5000);
+    }
+    return () => clearTimeout(timer);
+  }, [sidebarOpen]);
 
   if (status === "loading") {
     return (
@@ -33,27 +46,32 @@ export default function Navigation() {
   }
 
   return (
-    <nav className="bg-white shadow-lg">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-gray-800 mr-8">
-              Prodavnica
+    <nav className="flex items-center justify-between p-4 bg-gray-100">
+      {/* Hamburger na lijevoj strani */}
+      <div className="flex items-center gap-4">
+        <button
+          onClick={() => setSidebarOpen(true)}
+          className="text-gray-700 hover:text-gray-900"
+        >
+          <Bars3Icon className="h-8 w-8" />
+        </button>
+        <div className="text-xl font-bold">Prodavnica</div>
+      </div>
+      {/* Ostali elementi navigacije */}
+      <div className="flex items-center space-x-4">
+        {session ? (
+          <>
+            <span className="text-gray-700">
+              Dobrodošli, {session.user?.name || session.user?.email}
+            </span>
+
+            <Link
+              href="/admin"
+              className="hidden sm:block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
+            >
+              Admin
             </Link>
-          </div>
-          <div className="flex items-center space-x-4">
-            {session ? (
-              <>
-                <span className="text-gray-700">
-                  Dobrodošli, {session.user?.name || session.user?.email}
-                </span>
-                <Link
-                  href="/products"
-                  className="hidden sm:block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
-                >
-                  Proizvodi
-                </Link>
-                <Link
+            <Link
                   href="/cart"
                   className="relative text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
                 >
@@ -64,52 +82,31 @@ export default function Navigation() {
                     </span>
                   )}
                 </Link>
-                <Link
-                  href="/orders"
-                  className="hidden sm:block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
-                >
-                  Porudžbine
-                </Link>
-                <div className="nav-buttons flex items-center gap-2">
-                  <Link
-                    href="/profile"
-                    className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
-                  >
-                    Profil
-                  </Link>
-                  <Link
-                    href="/admin"
-                    className="hidden sm:block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
-                  >
-                    Admin
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200"
-                  >
-                    Odjava
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                    className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
-                >
-                  Prijava
-                </Link>
-                <Link
-                  href="/register"
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition duration-200"
-                >
-                  Registracija
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
+            <button
+              onClick={handleLogout}
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200"
+            >
+              Odjava
+            </button>
+          </>
+        ) : (
+          <>
+            <Link
+              href="/login"
+              className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
+            >
+              Prijava
+            </Link>
+            <Link
+              href="/register"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition duration-200"
+            >
+              Registracija
+            </Link>
+          </>
+        )}
       </div>
+      {sidebarOpen && <Sidebar onClose={() => setSidebarOpen(false)} />}
     </nav>
   );
 }

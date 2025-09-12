@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import Navigation from "../../components/Navigation";
 import { useCart } from "../../components/CartContext";
 
 interface Product {
@@ -57,7 +56,6 @@ export default function ProductsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
         <div className="flex items-center justify-center py-12">
           <div className="text-lg">Učitavam proizvode...</div>
         </div>
@@ -67,7 +65,6 @@ export default function ProductsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
       <div className="max-w-7xl mx-auto py-12 px-4">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Naši proizvodi</h1>
 
@@ -103,7 +100,7 @@ export default function ProductsPage() {
                   <p className="text-2xl font-bold text-green-600 mb-4">
                     {product.price.toFixed(2)} RSD
                   </p>
-                  <button 
+                  <button
                     onClick={() => handleAddToCart(product.id)}
                     disabled={addingToCart === product.id}
                     className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"

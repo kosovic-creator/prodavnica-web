@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import Navigation from "../../components/Navigation";
+
 
 
 interface OrderItem {
@@ -69,7 +69,7 @@ function OrdersContent() {
   if (!session) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
+
         <div className="max-w-7xl mx-auto py-12 px-4">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-4">Vaše porudžbine</h1>
@@ -89,7 +89,7 @@ function OrdersContent() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
+
         <div className="flex items-center justify-center py-12">
           <div className="text-lg">Učitavam porudžbine...</div>
         </div>
@@ -99,7 +99,7 @@ function OrdersContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
+    
       <div className="max-w-7xl mx-auto py-12 px-4">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Vaše porudžbine</h1>
