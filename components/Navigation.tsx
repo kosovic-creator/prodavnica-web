@@ -82,7 +82,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
       </div>
       {/* Search bar sa ikonicom */}
       <form onSubmit={handleSearch} className="flex-1 flex justify-center">
-        <div className="relative w-40 sm:w-60 md:w-80 lg:w-1/2">
+        <div className="relative w-40 sm:w-40 md:w-80 lg:w-1/2">
           <input
             type="text"
             value={search}
@@ -124,7 +124,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
           </>
         )}
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-1">
         <button
           onClick={() => handleLanguageChange('en')}
           className="text-2xl mx-2 text-gray-700 hover:text-gray-900"
@@ -134,7 +134,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
         </button>
         <button
           onClick={() => handleLanguageChange('sr')}
-          className="text-2xl mx-2 text-gray-700 hover:text-gray-900"
+          className="text-2xl mx-2 text-gray-700 hover:text-gray-900 pl-0.5 mr-4 pr-4"
           aria-label="Montenegro"
         >
           🇲🇪
