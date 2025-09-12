@@ -6,17 +6,20 @@ import {
   ArrowLeftOnRectangleIcon,
   PlusCircleIcon,
 } from "@heroicons/react/24/outline";
+import { Session } from "next-auth";
 
 interface SidebarProps {
   onClose: () => void;
   isAuthenticated: boolean;
   handleLogout: () => void;
+  session: Session;
 }
 
 export default function Sidebar({
   onClose,
   isAuthenticated,
   handleLogout,
+  session,
 }: SidebarProps) {
   return (
     <div className="fixed top-0 left-0 h-full w-64 bg-white text-gray-900 flex flex-col shadow-lg z-50">
@@ -69,7 +72,7 @@ export default function Sidebar({
           {isAuthenticated ? (
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200"
+              className="flex items-center gap-2  text-red-700 px-4 py-2 rounded-md transition duration-200"
             >
               <ArrowRightOnRectangleIcon className="h-5 w-5" />
               {/* Odjava */}
@@ -78,14 +81,14 @@ export default function Sidebar({
             <>
               <Link
                 href="/login"
-                className="flex items-center gap-2 text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
+                  className="flex items-center gap-2 text-green-700 hover:text-green-500 px-3 py-2 rounded-md transition duration-200"
               >
                 <ArrowLeftOnRectangleIcon className="h-5 w-5" />
                 {/* Prijava */}
               </Link>
               <Link
                 href="/register"
-                className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition duration-200"
+                  className="flex items-center gap-2 text-blue-950 px-4 py-2 rounded-md transition duration-200"
               >
                 <PlusCircleIcon className="h-5 w-5" />
                 {/* Registracija */}
