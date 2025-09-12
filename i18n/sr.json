@@ -1,6 +1,8 @@
 {
-  "welcome": "Dobrodošli",
+  "welcome": "Dobrodošli u našu prodavnicu",
   "login": "Prijava",
   "logout": "Odjava",
-  "greeting": "Dobrodošli, {{name}}"
+  "greeting": "Dobrodošli, {{name}}",
+  "hello": "Zdravo",
+  "successfully logged in": "Uspješno ste se prijavili"
 }

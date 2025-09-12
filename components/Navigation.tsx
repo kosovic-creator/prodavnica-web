@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import '../i18n/i18n'; // Dodaj ovo na vrh fajla
-
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useCart } from "./CartContext";
@@ -83,7 +82,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
       </div>
       {/* Search bar sa ikonicom */}
       <form onSubmit={handleSearch} className="flex-1 flex justify-center">
-        <div className="relative w-96">
+        <div className="relative w-60 sm:w-80 md:w-96 lg:w-1/2">
           <input
             type="text"
             value={search}

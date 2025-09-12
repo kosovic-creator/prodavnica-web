@@ -1,6 +1,10 @@
 {
-  "welcome": "Welcome",
+  "welcome": "Welcome in our store",
   "login": "Login",
   "logout": "Logout",
-  "greeting": "Welcome, {{name}}"
+  "greeting": "Welcome, {{name}}",
+  "successfully logged in": "You have successfully logged in",
+  "hello": "Hello",
+  "cart": "Cart",
+  "admin": "Admin"
 }
