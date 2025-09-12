@@ -15,6 +15,7 @@ const stripePromise = loadStripe('pk_test_51QzXjhGsYKIy68At6fXHC8XTKOsEwwPcC8M3b
 function PlacanjePageContent() {
   const [clientSecret, setClientSecret] = useState<string>('');
   const [orderAmount, setOrderAmount] = useState<number | null>(null);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
   const searchParams = useSearchParams();
   const orderId = searchParams.get('orderId');
 
@@ -49,9 +50,14 @@ function PlacanjePageContent() {
     <div>
       <h2>Plaćanje</h2>
       {orderAmount && <div>Iznos za plaćanje: {orderAmount.toFixed(2)} RSD</div>}
+      {paymentSuccess && (
+        <div style={{ color: 'green', margin: '10px 0' }}>
+          Plaćanje je uspješno! Potvrda je poslata na vaš email.
+        </div>
+      )}
       {clientSecret && (
         <Elements stripe={stripePromise} options={options}>
-          <CheckoutForm clientSecret={clientSecret} />
+          <CheckoutForm clientSecret={clientSecret} onSuccess={() => setPaymentSuccess(true)} />
         </Elements>
       )}
     </div>

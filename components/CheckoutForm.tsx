@@ -4,9 +4,10 @@ import React, { FormEvent, useState } from 'react';
 
 interface CheckoutFormProps {
   clientSecret: string;
+  onSuccess?: () => void;
 }
 
-function CheckoutForm({ clientSecret }: CheckoutFormProps) {
+function CheckoutForm({ clientSecret, onSuccess }: CheckoutFormProps) {
   const stripe = useStripe();
   const elements = useElements();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -29,6 +30,7 @@ function CheckoutForm({ clientSecret }: CheckoutFormProps) {
       if (result.paymentIntent.status === 'succeeded') {
         setErrorMsg(null);
         console.log('Payment succeeded!');
+        if (onSuccess) onSuccess();
       }
     }
   };

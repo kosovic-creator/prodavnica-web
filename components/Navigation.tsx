@@ -77,12 +77,12 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
           <Bars3Icon className="h-8 w-8" />
         </button>
         <span className="text-gray-700">
-          {t('greeting', { name: session?.user?.name || session?.user?.email })}
+          {session?.user?.name || session?.user?.email}
         </span>
       </div>
       {/* Search bar sa ikonicom */}
       <form onSubmit={handleSearch} className="flex-1 flex justify-center">
-        <div className="relative w-60 sm:w-80 md:w-96 lg:w-1/2">
+        <div className="relative w-40 sm:w-60 md:w-80 lg:w-1/2">
           <input
             type="text"
             value={search}
