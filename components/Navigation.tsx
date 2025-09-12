@@ -123,11 +123,19 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
         )}
       </div>
       <div className="flex gap-2">
-        <button onClick={() => handleLanguageChange('en')} className="text-gray-700 hover:text-gray-900">
-          English
+        <button
+          onClick={() => handleLanguageChange('en')}
+          className="text-2xl mx-2 text-gray-700 hover:text-gray-900"
+          aria-label="English"
+        >
+          🇬🇧
         </button>
-        <button onClick={() => handleLanguageChange('sr')} className="text-gray-700 hover:text-gray-900">
-          Srpski
+        <button
+          onClick={() => handleLanguageChange('sr')}
+          className="text-2xl mx-2 text-gray-700 hover:text-gray-900"
+          aria-label="Montenegro"
+        >
+          🇲🇪
         </button>
       </div>
       {sidebarOpen && (
