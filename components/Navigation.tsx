@@ -20,6 +20,16 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
   const { cart } = useCart();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [query, setQuery] = useState('');
+  interface Product {
+    id: string;
+    name: string;
+    price: number;
+    image?: string;
+  }
+
+  const [results, setResults] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
   const { t, i18n } = useTranslation();
 
   const handleLogout = async () => {
@@ -37,10 +47,13 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
     return () => clearTimeout(timer);
   }, [sidebarOpen, onSidebarChange]);
 
-  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Dodaj logiku za pretragu proizvoda
-    // npr. router.push(`/products?search=${search}`)
+    setLoading(true);
+    const res = await fetch(`/api/products/search?name=${encodeURIComponent(query)}`);
+    const data = await res.json();
+    setResults(data);
+    setLoading(false);
   };
 
   const handleLanguageChange = (lng: string) => {
@@ -85,8 +98,8 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
         <div className="relative w-40 sm:w-40 md:w-80 lg:w-1/2">
           <input
             type="text"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
+            value={query}
+            onChange={e => setQuery(e.target.value)}
             placeholder="Pretraži proizvode..."
             className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 pr-10"
           />
@@ -147,6 +160,28 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
           handleLogout={handleLogout}
           session={session}
         />
+      )}
+      {loading && <div>Pretražujem...</div>}
+      {results.length > 0 && (
+        <ul className="bg-white border rounded w-full max-w-md mt-2">
+          {results.map(product => (
+            <li key={product.id} className="flex items-center p-2 border-b last:border-b-0">
+              {product.image && (
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-12 h-12 object-cover rounded mr-3"
+                />
+              )}
+              <div className="flex-1">
+                <Link href={`/products/${product.id}`} className="font-semibold hover:underline">
+                  {product.name}
+                </Link>
+                <div className="text-sm text-gray-600">{product.price} RSD</div>
+              </div>
+            </li>
+          ))}
+        </ul>
       )}
     </nav>
   );
