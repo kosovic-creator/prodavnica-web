@@ -21,11 +21,3 @@ export async function sendOrderConfirmationEmail(userEmail: string, orderId: num
     await transporter.sendMail(mailOptions);
 }
 
-// // U funkciji za završetak kupovine:
-// exports.completeOrder = async (req, res) => {
-//     // ...existing code...
-//     const order = await Order.create({ /* podaci o porudžbini */ });
-//     await sendOrderConfirmationEmail(req.user.email, order.id);
-//     res.status(201).json({ message: 'Porudžbina potvrđena', order });
-//     // ...existing code...
-// }

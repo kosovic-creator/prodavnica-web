@@ -99,7 +99,7 @@ function OrdersContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-    
+
       <div className="max-w-7xl mx-auto py-12 px-4">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Vaše porudžbine</h1>
@@ -160,13 +160,15 @@ function OrdersContent() {
                       {order.status === 'completed' ? 'Završeno' : order.status}
                     </span>
                     {/* Dodaj dugme za plaćanje ako nije završeno */}
-                    {order.status !== 'completed' && (
+                    {order.status !== 'completed' ? (
                       <Link
                         href={`/placanje?orderId=${order.id}`}
                         className="ml-4 bg-indigo-600 text-white px-4 py-1 rounded hover:bg-indigo-700"
                       >
                         Plati
                       </Link>
+                    ) : (
+                      <>Poruči</>
                     )}
                   </div>
                 </div>
@@ -192,12 +194,12 @@ function OrdersContent() {
                         <div className="flex-1">
                           <h5 className="font-medium text-gray-900">{item.product.name}</h5>
                           <p className="text-sm text-gray-600">
-                            Količina: {item.quantity} × {item.price.toFixed(2)} RSD
+                            Količina: {item.quantity} × {item.price.toFixed(2)} EUR
                           </p>
                         </div>
                         <div className="text-right">
                           <p className="font-semibold text-gray-900">
-                            {(item.price * item.quantity).toFixed(2)} RSD
+                            {(item.price * item.quantity).toFixed(2)} EUR
                           </p>
                         </div>
                       </div>

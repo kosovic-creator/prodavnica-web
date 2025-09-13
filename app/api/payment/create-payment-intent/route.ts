@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import prisma from '@/lib/prisma';
 import nodemailer from 'nodemailer';
+import { getServerSession } from "next-auth/next";
 
 const secretKey = process.env.SECRET_KEY;
 if (!secretKey) {
@@ -23,7 +24,7 @@ async function sendConfirmationEmail(to: string, amount: number) {
     from: process.env.EMAIL_USER,
     to,
     subject: 'Potvrda o plaćanju',
-    text: `Vaša uplata u iznosu od ${(amount / 100).toFixed(2)} RSD je uspješno primljena. Hvala na kupovini!`,
+    text: `Vaša uplata u iznosu od ${(amount / 100).toFixed(2)} EUR je uspješno primljena. Hvala na kupovini!`,
   });
 }
 
@@ -44,7 +45,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Porudžbina nije pronađena' }, { status: 404 });
     }
     finalAmount = Math.round(order.total * 100); // Stripe amount in cents
-    userEmail = order.email ?? ''; // Pretpostavljamo da 'email' postoji u modelu Order
+    const session = await getServerSession();
+    userEmail = session?.user?.email ?? ''; // Pretpostavljamo da 'email' postoji u modelu Order
     // userEmail = order.email; // Removed because 'email' does not exist on order
   try {
     const paymentIntent = await stripe.paymentIntents.create({

@@ -90,7 +90,7 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-     
+
       <div className="max-w-7xl mx-auto py-12 px-4">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Vaša korpa</h1>
 
@@ -194,7 +194,7 @@ export default function CartPage() {
                   disabled={isCheckingOut}
                 >
                   {isCheckingOut ? "Obrada..." : "Završi kupovinu"}
-                  {/* sendOrderConfirmationEmail(session.user.email, order.id); */}
+                 
                 </button>
                 {checkoutError && (
                   <div className="text-red-600 text-sm mt-2 text-center">
