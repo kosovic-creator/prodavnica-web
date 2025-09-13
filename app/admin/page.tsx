@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import Navigation from "../../components/Navigation";
+
 
 interface User {
   id: string;
@@ -294,7 +294,7 @@ export default function AdminPage() {
   if (status === "loading") {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
+      
         <div className="flex items-center justify-center py-12">
           <div className="text-lg">Učitavam...</div>
         </div>
@@ -305,7 +305,7 @@ export default function AdminPage() {
   if (!session) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
+
         <div className="max-w-7xl mx-auto py-12 px-4">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-red-600">Neautorizovan pristup</h1>
@@ -318,7 +318,7 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
+
       <div className="max-w-7xl mx-auto py-12 px-4">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Admin Panel</h1>
 
@@ -481,8 +481,8 @@ export default function AdminPage() {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <span className={`px-2 py-1 rounded-full text-xs ${
-                              user.role === 'admin' 
-                                ? 'bg-red-100 text-red-800' 
+                              user.role === 'admin'
+                                ? 'bg-red-100 text-red-800'
                                 : 'bg-green-100 text-green-800'
                             }`}>
                               {user.role}
@@ -542,7 +542,7 @@ export default function AdminPage() {
                     required
                   />
                 </div>
-                
+
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -567,9 +567,9 @@ export default function AdminPage() {
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="text-center text-gray-500">ili</div>
-                  
+
                   <input
                     type="url"
                     placeholder="URL slike (alternativno)"
@@ -577,7 +577,7 @@ export default function AdminPage() {
                     onChange={(e) => setProductForm({ ...productForm, image: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
-                  
+
                   {productForm.image && (
                     <div className="mt-2">
                       <p className="text-sm text-gray-600 mb-2">Pregled slike:</p>
@@ -596,15 +596,15 @@ export default function AdminPage() {
                     type="submit"
                     disabled={uploadingImage}
                     className={`px-4 py-2 rounded-md text-white ${
-                      uploadingImage 
-                        ? "bg-gray-400 cursor-not-allowed" 
+                      uploadingImage
+                        ? "bg-gray-400 cursor-not-allowed"
                         : "bg-indigo-600 hover:bg-indigo-700"
                     }`}
                   >
-                    {uploadingImage 
-                      ? "Upload u toku..." 
-                      : editingProduct 
-                        ? "Ažuriraj" 
+                    {uploadingImage
+                      ? "Upload u toku..."
+                      : editingProduct
+                        ? "Ažuriraj"
                         : "Dodaj"
                     }
                   </button>
@@ -614,8 +614,8 @@ export default function AdminPage() {
                       onClick={cancelEdit}
                       disabled={uploadingImage}
                       className={`px-4 py-2 rounded-md text-white ${
-                        uploadingImage 
-                          ? "bg-gray-400 cursor-not-allowed" 
+                        uploadingImage
+                          ? "bg-gray-400 cursor-not-allowed"
                           : "bg-gray-500 hover:bg-gray-600"
                       }`}
                     >
@@ -714,8 +714,8 @@ export default function AdminPage() {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <span className={`px-2 py-1 rounded-full text-xs ${
-                              order.status === 'completed' 
-                                ? 'bg-green-100 text-green-800' 
+                              order.status === 'completed'
+                                ? 'bg-green-100 text-green-800'
                                 : order.status === 'pending'
                                 ? 'bg-yellow-100 text-yellow-800'
                                 : 'bg-red-100 text-red-800'
