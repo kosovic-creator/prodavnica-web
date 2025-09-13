@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useCart } from "../../components/CartContext";
@@ -15,32 +16,31 @@ interface Product {
 }
 
 export default function ProductsPage() {
+  const searchParams = useSearchParams();
+  const search = searchParams.get("search") || "";
   const { data: session } = useSession();
   const { addToCart } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [addingToCart, setAddingToCart] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
-    try {
-      const response = await fetch("/api/products");
-      if (response.ok) {
-        const data = await response.json();
-        setProducts(data);
+    async function fetchProducts() {
+      setLoading(true);
+      let url = "";
+      if (search.trim()) {
+        url = `/api/products/search?name=${encodeURIComponent(search)}`;
       } else {
-        setError("Greška pri učitavanju proizvoda");
+        url = `/api/products`; // Nova ruta za sve proizvode
       }
-    } catch {
-      setError("Greška pri učitavanju proizvoda");
-    } finally {
+      const res = await fetch(url);
+      const data = await res.json();
+      setProducts(Array.isArray(data) ? data : []);
       setLoading(false);
     }
-  };
+    fetchProducts();
+  }, [search]);
 
   const handleAddToCart = async (productId: string) => {
     try {
@@ -79,34 +79,20 @@ export default function ProductsPage() {
             <p className="text-gray-600 text-lg">Trenutno nema dostupnih proizvoda.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products.map((product) => (
               <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                {product.image ? (
-                  <Image
+                {product.image && (
+                  <img
                     src={product.image}
                     alt={product.name}
-                    width={300}
-                    height={200}
                     className="w-full h-48 object-cover"
                   />
-                ) : (
-                  <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
-                    <span className="text-gray-500">Nema slike</span>
-                  </div>
                 )}
                 <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
-                  <p className="text-2xl font-bold text-green-600 mb-4">
-                    {product.price.toFixed(2)} RSD
-                  </p>
-                  <button
-                    onClick={() => handleAddToCart(product.id)}
-                    disabled={addingToCart === product.id}
-                    className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {addingToCart === product.id ? "Dodajem..." : "Dodaj u korpu"}
-                  </button>
+                  <div className="font-semibold text-lg mb-2">{product.name}</div>
+                  <div className="text-gray-600 mb-2">{product.price} RSD</div>
+                  {/* Dodaj dugme ili link za detalje po potrebi */}
                 </div>
               </div>
             ))}

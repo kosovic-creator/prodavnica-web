@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import { Session } from "next-auth";
 import { useTranslation } from "react-i18next";
+import { useRouter } from 'next/navigation';
 
 
 interface NavigationProps {
@@ -21,6 +22,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [query, setQuery] = useState('');
+  const router = useRouter();
   interface Product {
     id: string;
     name: string;
@@ -47,13 +49,11 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
     return () => clearTimeout(timer);
   }, [sidebarOpen, onSidebarChange]);
 
-  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-    const res = await fetch(`/api/products/search?name=${encodeURIComponent(query)}`);
-    const data = await res.json();
-    setResults(data);
-    setLoading(false);
+    if (query.trim()) {
+      router.push(`/products?search=${encodeURIComponent(query)}`);
+    }
   };
 
   const handleLanguageChange = (lng: string) => {
