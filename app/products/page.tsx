@@ -35,7 +35,10 @@ export default function ProductsPage() {
         url = `/api/products`; // Nova ruta za sve proizvode
       }
       const res = await fetch(url);
-      const data = await res.json();
+      let data = [];
+      if (res.ok) {
+        data = await res.json();
+      }
       setProducts(Array.isArray(data) ? data : []);
       setLoading(false);
     }
