@@ -163,12 +163,17 @@ function OrdersContent() {
                     {order.status !== 'completed' ? (
                       <Link
                         href={`/placanje?orderId=${order.id}`}
-                        className="ml-4 bg-indigo-600 text-white px-4 py-1 rounded hover:bg-indigo-700"
+                        className={`ml-4 px-4 py-1 rounded ${order.status === 'completed' ? 'bg-gray-400 text-gray-300 cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}
+                        aria-disabled={order.status === 'completed'}
+                        tabIndex={order.status === 'completed' ? -1 : 0}
+                        onClick={e => {
+                          if (order.status === 'completed') e.preventDefault();
+                        }}
                       >
                         Plati
                       </Link>
                     ) : (
-                      <>Poruči</>
+                      <span className="text-gray-600 text-xs"></span>
                     )}
                   </div>
                 </div>
