@@ -167,27 +167,7 @@ export default function ProductsPage() {
         )}
       </div>
       {/* ...search input i dugme... */}
-      <div>
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-          Naziv proizvoda za pretragu
-        </label>
-        <input
-          id="name"
-          name="name"
-          type="text"
-          required
-          className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          placeholder="Naziv proizvoda"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <button
-          onClick={() => fetchProductsSearch(searchTerm)}
-          className="mt-2 w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition duration-200"
-        >
-          Pronađi slične
-        </button>
-      </div>
+     
     </div>
   );
 }
