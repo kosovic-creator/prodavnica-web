@@ -1,4 +1,4 @@
-import { getProductByName } from "@/lib/products";
+import { getProductByName } from "@/actions/products";
 import Image from "next/image";
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {

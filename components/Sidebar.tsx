@@ -79,6 +79,7 @@ export default function Sidebar({
               className="hover:bg-gray-100 rounded px-3 py-2 flex items-center gap-2"
             >
               <UserIcon className="h-5 w-5" />
+              Profil
             </Link>
           </li>
         </ul>
@@ -89,7 +90,7 @@ export default function Sidebar({
               className="flex items-center gap-2  text-red-700 px-4 py-2 rounded-md transition duration-200"
             >
               <ArrowRightOnRectangleIcon className="h-5 w-5" />
-              {/* Odjava */}
+               Odjava
             </button>
           ) : (
             <>
@@ -98,14 +99,14 @@ export default function Sidebar({
                   className="flex items-center gap-2 text-green-700 hover:text-green-500 px-3 py-2 rounded-md transition duration-200"
               >
                 <ArrowLeftOnRectangleIcon className="h-5 w-5" />
-                {/* Prijava */}
+                Prijava
               </Link>
               <Link
                 href="/register"
                   className="flex items-center gap-2 text-blue-950 px-4 py-2 rounded-md transition duration-200"
               >
                 <PlusCircleIcon className="h-5 w-5" />
-                {/* Registracija */}
+               Registracija
               </Link>
             </>
           )}

@@ -1,4 +1,4 @@
-import { getProductById } from "@/lib/products";
+import { getProductById } from "@/actions/products";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 
