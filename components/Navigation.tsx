@@ -52,7 +52,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (query.trim()) {
-      router.push(`/products?search=${encodeURIComponent(query)}`);
+      router.push(`/api/products/naziv/${encodeURIComponent(query)}`);
     }
   };
 

@@ -36,7 +36,7 @@ function OrdersContent() {
   const [success, setSuccess] = useState("");
 
   useEffect(() => {
-    if (searchParams.get('success') === 'true') {
+    if (searchParams && searchParams.get('success') === 'true') {
       setSuccess("Porudžbina je uspešno kreirana!");
     }
   }, [searchParams]);

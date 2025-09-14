@@ -8,7 +8,7 @@ export default function LoginMessage() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const message = searchParams.get("message");
+    const message = searchParams?.get("message");
     if (message === "Registration successful") {
       setSuccess("Registracija je uspešna! Sada se možete prijaviti.");
     }

@@ -17,7 +17,7 @@ function PlacanjePageContent() {
   const [orderAmount, setOrderAmount] = useState<number | null>(null);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const searchParams = useSearchParams();
-  const orderId = searchParams.get('orderId');
+  const orderId = searchParams?.get('orderId');
 
   useEffect(() => {
     async function fetchOrderAndCreateIntent() {

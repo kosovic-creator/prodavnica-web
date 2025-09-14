@@ -1,19 +1,17 @@
+// app/api/products/naziv/[name]/route.ts
 import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
-// Ovo je primjer, zamijeni sa tvojom bazom ili fetch funkcijom
-// const products = [
-//   { id: '1', name: 'Laptop', price: 1000, image: '/laptop.jpg' },
-//   { id: '2', name: 'Telefon', price: 500, image: '/telefon.jpg' },
-//   // ...ostali proizvodi...
-// ];
+export async function GET(request: Request) {
+  // Uzimanje 'name' parametra iz URL-a
+  const { pathname } = new URL(request.url);
+  // Regex za izdvajanje parametra iz pathname: /api/products/naziv/{name}
+  const name = decodeURIComponent(pathname.split('/').pop() || '');
 
-export async function GET(request: Request, { params }: { params: { name: string } }) {
-  const { name } = params;
   const products = await prisma.product.findMany({
     where: {
       name: {
-        contains: decodeURIComponent(name),
+        contains: name,
         mode: 'insensitive',
       },
     },

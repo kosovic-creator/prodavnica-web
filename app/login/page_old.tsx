@@ -16,7 +16,7 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (searchParams.get("verified") === "true") {
+    if (searchParams && searchParams.get("verified") === "true") {
       setSuccess("Email je uspešno verifikovan! Sada se možete prijaviti.");
     }
   }, [searchParams]);
