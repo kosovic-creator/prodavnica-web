@@ -129,7 +129,7 @@ export default function CartPage() {
                       <div className="flex-1">
                         <h3 className="font-semibold text-gray-900">{item.product.name}</h3>
                         <p className="text-green-600 font-bold">
-                          {item.product.price.toFixed(2)} RSD
+                          {item.product.price.toFixed(2)} EUR
                         </p>
                       </div>
                       <div className="flex items-center space-x-2">
@@ -150,7 +150,7 @@ export default function CartPage() {
                       </div>
                       <div className="text-right">
                         <p className="font-semibold text-gray-900">
-                          {(item.product.price * item.quantity).toFixed(2)} RSD
+                          {(item.product.price * item.quantity).toFixed(2)} EUR
                         </p>
                         <button
                           onClick={() => handleRemoveItem(item.id)}
@@ -176,16 +176,16 @@ export default function CartPage() {
                   </div>
                   <div className="flex justify-between">
                     <span>Subtotal:</span>
-                    <span>{cart.total.toFixed(2)} RSD</span>
+                      <span>{cart.total.toFixed(2)} EUR</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Dostava:</span>
-                    <span>0.00 RSD</span>
+                      <span>0.00 EUR</span>
                   </div>
                   <hr className="my-2" />
                   <div className="flex justify-between text-lg font-bold">
                     <span>Ukupno:</span>
-                    <span>{cart.total.toFixed(2)} RSD</span>
+                      <span>{cart.total.toFixed(2)} EUR</span>
                   </div>
                 </div>
                 <button
@@ -194,7 +194,7 @@ export default function CartPage() {
                   disabled={isCheckingOut}
                 >
                   {isCheckingOut ? "Obrada..." : "Završi kupovinu"}
-                 
+
                 </button>
                 {checkoutError && (
                   <div className="text-red-600 text-sm mt-2 text-center">

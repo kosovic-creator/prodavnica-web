@@ -294,7 +294,7 @@ export default function AdminPage() {
   if (status === "loading") {
     return (
       <div className="min-h-screen bg-gray-50">
-      
+
         <div className="flex items-center justify-center py-12">
           <div className="text-lg">Učitavam...</div>
         </div>
@@ -642,7 +642,7 @@ export default function AdminPage() {
                     )}
                     <h3 className="text-lg font-semibold">{product.name}</h3>
                     <p className="text-xl font-bold text-green-600">
-                      {product.price.toFixed(2)} RSD
+                      {product.price.toFixed(2)} EUR
                     </p>
                     <p className="text-sm text-gray-500 mb-4">
                       Kreiran: {new Date(product.createdAt).toLocaleDateString()}
@@ -710,7 +710,7 @@ export default function AdminPage() {
                             {order.user.name} ({order.user.email})
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            {order.total.toFixed(2)} RSD
+                            {order.total.toFixed(2)} EUR
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <span className={`px-2 py-1 rounded-full text-xs ${

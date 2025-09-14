@@ -49,7 +49,7 @@ function PlacanjePageContent() {
   return (
     <div>
       <h2>Plaćanje</h2>
-      {orderAmount && <div>Iznos za plaćanje: {orderAmount.toFixed(2)} RSD</div>}
+      {orderAmount && <div>Iznos za plaćanje: {orderAmount.toFixed(2)} EUR</div>}
       {paymentSuccess && (
         <div style={{ color: 'green', margin: '10px 0' }}>
           Plaćanje je uspješno! Potvrda je poslata na vaš email.

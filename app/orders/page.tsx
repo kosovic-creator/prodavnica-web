@@ -150,7 +150,7 @@ function OrdersContent() {
                   </div>
                   <div className="text-right">
                     <p className="text-lg font-bold text-gray-900">
-                      {order.total.toFixed(2)} RSD
+                      {order.total.toFixed(2)} EUR
                     </p>
                     <span className={`inline-flex px-2 py-1 rounded-full text-xs font-semibold ${
                       order.status === 'completed'

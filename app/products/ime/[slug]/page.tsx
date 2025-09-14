@@ -31,7 +31,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           </div>
         )}
         <h1 className="text-2xl font-bold mb-2">{product.name}</h1>
-        <p className="text-lg text-green-600 mb-4">{product.price.toFixed(2)} RSD</p>
+        <p className="text-lg text-green-600 mb-4">{product.price.toFixed(2)} EUR</p>
         <p className="text-sm text-gray-500">Kreirano: {new Date(product.createdAt).toLocaleDateString()}</p>
         <p className="text-sm text-gray-500">Ažurirano: {new Date(product.updatedAt).toLocaleDateString()}</p>
       </div>

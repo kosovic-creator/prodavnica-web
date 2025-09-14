@@ -177,7 +177,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
                 <Link href={`/products/${product.id}`} className="font-semibold hover:underline">
                   {product.name}
                 </Link>
-                <div className="text-sm text-gray-600">{product.price} RSD</div>
+                <div className="text-sm text-gray-600">{product.price} EUR</div>
               </div>
             </li>
           ))}

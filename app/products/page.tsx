@@ -113,7 +113,7 @@ export default function ProductsPage() {
               <div className="p-4">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">{products[0].name}</h3>
                 <p className="text-2xl font-bold text-green-600 mb-4">
-                  {products[0].price.toFixed(2)} RSD
+                  {products[0].price.toFixed(2)} EUR
                 </p>
                 <button
                   onClick={() => handleAddToCart(products[0].id)}
@@ -149,7 +149,7 @@ export default function ProductsPage() {
                 <div className="p-4">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
                   <p className="text-2xl font-bold text-green-600 mb-4">
-                    {product.price.toFixed(2)} RSD
+                    {product.price.toFixed(2)} EUR
                   </p>
                   <button
                     onClick={() => handleAddToCart(product.id)}
