@@ -6,6 +6,10 @@ import {
   ArrowRightOnRectangleIcon,
   ArrowLeftOnRectangleIcon,
   PlusCircleIcon,
+  HomeIcon,
+  ShoppingBagIcon,
+  ClipboardIcon,
+  Bars3Icon,
 } from "@heroicons/react/24/outline";
 import { Session } from "next-auth";
 import NextAuth from "next-auth";
@@ -43,35 +47,33 @@ export default function Sidebar({
       >
         &#10005;
       </button>
-      <div className="p-6 text-2xl font-bold border-b border-gray-200">
+      <div className="p-6 text-2xl font-bold border-b border-gray-200 text-left flex items-center gap-2">
+        <Bars3Icon className="h-6 w-6 text-gray-600" />
         Meni
       </div>
       <nav className="flex-1 p-4">
-        <ul className="space-y-4">
+        <ul className="space-y-4 items-start flex flex-col">
           <li>
-            <Link
-              href="/"
-              className="hover:bg-gray-100 rounded px-3 py-2 block"
-            >
-              Početna
+            <Link href="/" className="flex items-center space-x-2 hover:bg-gray-100 rounded px-3 py-2">
+              <HomeIcon className="h-5 w-5 text-gray-600" />
+              <span>Početna</span>
             </Link>
           </li>
           <li>
             <Link
               href="/products"
-              className="hover:bg-gray-100 rounded px-3 py-2 block"
+              className="flex items-center space-x-2 hover:bg-gray-100 rounded px-3 py-2"
             >
-              Proizvodi
+              <ShoppingBagIcon className="h-5 w-5 text-gray-600" />
+              <span>Proizvodi</span>
             </Link>
           </li>
 
           <li>
-            <Link
-              href="/orders"
-              className="hover:bg-gray-100 rounded px-3 py-2 block"
-            >
-              Porudžbine
-            </Link>
+            <a href="/orders" className="flex items-center space-x-2 hover:bg-gray-100 rounded px-3 py-2">
+              <ClipboardIcon className="h-5 w-5 text-gray-600" />
+              <span>Porudžbine</span>
+            </a>
           </li>
           <li>
             <Link
@@ -83,30 +85,30 @@ export default function Sidebar({
             </Link>
           </li>
         </ul>
-        <div className="mt-8 flex flex-col gap-2">
+        <div className="mt-8 flex flex-col gap-2 items-start w-full">
           {isAuthenticated ? (
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2  text-red-700 px-4 py-2 rounded-md transition duration-200"
+              className="flex items-center gap-2 text-red-700 px-3 py-2 rounded-md transition duration-200 w-full justify-start"
             >
               <ArrowRightOnRectangleIcon className="h-5 w-5" />
-               Odjava
+              Odjava
             </button>
           ) : (
             <>
               <Link
                 href="/login"
-                  className="flex items-center gap-2 text-green-700 hover:text-green-500 px-3 py-2 rounded-md transition duration-200"
+                  className="flex items-center gap-2 text-green-700 hover:text-green-500 px-3 py-2 rounded-md transition duration-200 w-full justify-start"
               >
                 <ArrowLeftOnRectangleIcon className="h-5 w-5" />
                 Prijava
               </Link>
               <Link
                 href="/register"
-                  className="flex items-center gap-2 text-blue-950 px-4 py-2 rounded-md transition duration-200"
+                  className="flex items-center gap-2 text-blue-950 px-3 py-2 rounded-md transition duration-200 w-full justify-start"
               >
                 <PlusCircleIcon className="h-5 w-5" />
-               Registracija
+                  Registracija
               </Link>
             </>
           )}
