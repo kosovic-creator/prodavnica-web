@@ -52,7 +52,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (query.trim()) {
-      router.push(`/products/${encodeURIComponent(query)}`);
+      router.push(`/products/ime/${encodeURIComponent(query)}`);
     }
   };
 

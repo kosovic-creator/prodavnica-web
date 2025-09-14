@@ -1,22 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { getProductById } from "@/lib/products";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 
-async function getProduct(id: string) {
-  const baseUrl =
-    process.env.NODE_ENV === "production"
-      ? "https://prodavnica-web.vercel.app"
-      : "http://localhost:3000";
-  const res = await fetch(`${baseUrl}/api/products/${id}`, { cache: "no-store" });
-  if (!res.ok) return null;
-  return res.json();
-}
-
-export default async function ProductPage({ params }: any) {
-  const id = Array.isArray(params.id) ? params.id[0] : params.id; // string
-  const product = await getProduct(id);
+export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const product = await getProductById(id);
   if (!product) return notFound();
-
 
   return (
     <div className="max-w-xl mx-auto py-12">
