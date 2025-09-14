@@ -46,7 +46,7 @@ export default function ProductsPage() {
 
   const fetchProductsSearch = async (searchTerm: string) => {
     try {
-      const response = await fetch(`/api/products/search?name=${searchTerm}`);
+      const response = await fetch(`/api/products/${searchTerm}`);
       if (response.ok) {
         const data = await response.json();
         setProducts(data);
@@ -93,7 +93,39 @@ export default function ProductsPage() {
           </div>
         )}
 
-        {products.length === 0 ? (
+        {/* Prikaz samo jednog proizvoda ako je rezultat pretrage jedan */}
+        {products.length === 1 ? (
+          <div className="flex justify-center">
+            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow w-96">
+              {products[0].image ? (
+                <Image
+                  src={products[0].image}
+                  alt={products[0].name}
+                  width={300}
+                  height={200}
+                  className="w-full h-48 object-cover"
+                />
+              ) : (
+                <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
+                  <span className="text-gray-500">Nema slike</span>
+                </div>
+              )}
+              <div className="p-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{products[0].name}</h3>
+                <p className="text-2xl font-bold text-green-600 mb-4">
+                  {products[0].price.toFixed(2)} RSD
+                </p>
+                <button
+                  onClick={() => handleAddToCart(products[0].id)}
+                  disabled={addingToCart === products[0].id}
+                  className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {addingToCart === products[0].id ? "Dodajem..." : "Dodaj u korpu"}
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : products.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-600 text-lg">Trenutno nema dostupnih proizvoda.</p>
           </div>
@@ -134,27 +166,28 @@ export default function ProductsPage() {
           </div>
         )}
       </div>
-       <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                Naziv proizvoda za pretragu
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                required
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Naziv proizvoda"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-               <button
-                    onClick={() => fetchProductsSearch(searchTerm)}
-                    className="mt-2 w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition duration-200"
-                  >
-                    Pronađi slične
-                  </button>
-            </div>
+      {/* ...search input i dugme... */}
+      <div>
+        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+          Naziv proizvoda za pretragu
+        </label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          required
+          className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          placeholder="Naziv proizvoda"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button
+          onClick={() => fetchProductsSearch(searchTerm)}
+          className="mt-2 w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition duration-200"
+        >
+          Pronađi slične
+        </button>
+      </div>
     </div>
   );
 }
