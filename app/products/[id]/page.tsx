@@ -4,8 +4,10 @@ import Image from "next/image";
 
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const product = await getProductById(id);
-  if (!product) return notFound();
+  const response = await getProductById(id);
+  if (!response || !response.ok) return notFound();
+
+  const product = await response.json();
 
   return (
     <div className="max-w-xl mx-auto py-12">

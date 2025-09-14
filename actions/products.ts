@@ -1,4 +1,9 @@
 import { PrismaClient } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+import { getServerSession } from "next-auth/next";
+
+// GET - Fetch single product
 export interface Product {
   id: string;
   name: string;
@@ -8,7 +13,7 @@ export interface Product {
   updatedAt: string;
 }
 
-const prisma = new PrismaClient();
+// Removed duplicate prisma declaration
 
 export async function getProductByName(name: string): Promise<Product | null> {
   const product = await prisma.product.findFirst({
@@ -31,7 +36,18 @@ export async function getProductByName(name: string): Promise<Product | null> {
 }
 
 export async function getProductById(id: string) {
-  return await prisma.product.findUnique({
-    where: { id },
-  });
+  try {
+    const product = await prisma.product.findUnique({
+      where: { id },
+    });
+    if (!product) {
+      return NextResponse.json({ error: "Proizvod nije pronađen" }, { status: 404 });
+    }
+
+    return NextResponse.json(product);
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    return NextResponse.json({ error: "Greška pri učitavanju proizvoda" }, { status: 500 });
+  }
 }
+
