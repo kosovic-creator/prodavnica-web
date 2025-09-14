@@ -4,8 +4,7 @@ import { getServerSession } from "next-auth/next";
 import prisma from "@/lib/prisma";
 import { authOptions } from "@/lib/authOptions";
 import { sendOrderConfirmationEmail } from "@/controlers/orderController";
-
-
+import { PAGE_SIZE } from "@/lib/constants";
 
 export async function POST() {
   try {
@@ -74,7 +73,7 @@ export async function POST() {
 
     // Dodaj poziv funkcije ovdje:
 
-await sendOrderConfirmationEmail(session.user.email, parseInt(result.order.id, 10));
+    await sendOrderConfirmationEmail(session.user.email, parseInt(result.order.id, 10));
 
     return NextResponse.json({ message: "Porudžbina potvrđena", order: result.order });
 
@@ -84,19 +83,23 @@ await sendOrderConfirmationEmail(session.user.email, parseInt(result.order.id, 1
   }
 }
 
+// GET - Fetch orders with pagination (admin only)
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
-    }
-
-    // Check if user is admin (for admin access to all orders)
     const { searchParams } = new URL(request.url);
+    const page = Number(searchParams.get("page")) || 1;
+    const pageSize = Number(searchParams.get("pageSize")) || PAGE_SIZE;
+    const skip = (page - 1) * pageSize;
     const isAdmin = searchParams.get('admin') === 'true';
 
     if (isAdmin) {
+    // Check if user is admin (for admin access to all orders)
+      const session = await getServerSession(authOptions);
+
+      if (!session?.user?.email) {
+        return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
+      }
+
       const user = await prisma.user.findUnique({
         where: { email: session.user.email },
         select: { role: true },
@@ -106,24 +109,29 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 403 });
       }
 
-      // Get all orders for admin
-      const orders = await prisma.order.findMany({
-        include: {
-          user: {
-            select: { id: true, name: true, email: true },
+      // Get all orders for admin with pagination
+      const [items, totalCount] = await Promise.all([
+        prisma.order.findMany({
+          skip,
+          take: pageSize,
+          include: {
+            user: { select: { id: true, name: true, email: true } },
+            orderItems: { include: { product: true } },
           },
-          orderItems: {
-            include: {
-              product: true,
-            },
-          },
-        },
-        orderBy: { createdAt: 'desc' },
-      });
-
-      return NextResponse.json(orders);
+          orderBy: { createdAt: 'desc' },
+        }),
+        prisma.order.count(),
+      ]);
+      const totalPages = Math.ceil(totalCount / pageSize);
+      return NextResponse.json({ items, totalPages, totalCount });
 
     } else {
+      const session = await getServerSession(authOptions);
+
+      if (!session?.user?.email) {
+        return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
+      }
+
       // Get orders for current user
       const user = await prisma.user.findUnique({
         where: { email: session.user.email },

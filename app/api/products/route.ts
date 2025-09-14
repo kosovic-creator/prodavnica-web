@@ -2,16 +2,28 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
+import { PAGE_SIZE } from "@/lib/constants";
 
-// GET - Fetch all products
-export async function GET() {
+// GET - Fetch products with pagination
+export async function GET(request: NextRequest) {
   try {
-    const products = await prisma.product.findMany({
-      orderBy: {
-        createdAt: 'desc'
-      }
-    });
-    return NextResponse.json(products ?? []);
+    const { searchParams } = new URL(request.url);
+    const page = Number(searchParams.get("page")) || 1;
+    const pageSize = Number(searchParams.get("pageSize")) || PAGE_SIZE;
+    const skip = (page - 1) * pageSize;
+
+    const [items, totalCount] = await Promise.all([
+      prisma.product.findMany({
+        skip,
+        take: pageSize,
+        orderBy: { createdAt: "desc" },
+      }),
+      prisma.product.count(),
+    ]);
+
+    const totalPages = Math.ceil(totalCount / pageSize);
+
+    return NextResponse.json({ items, totalPages, totalCount });
   } catch (error) {
     console.error("Error fetching products:", error);
     return NextResponse.json({ error: "Greška pri učitavanju proizvoda" }, { status: 500 });

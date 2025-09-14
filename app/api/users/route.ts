@@ -2,29 +2,41 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/authOptions";;
+import { authOptions } from "@/lib/authOptions";
+import { PAGE_SIZE } from "@/lib/constants";
 
-// GET - Fetch all users (admin only)
-export async function GET() {
+// GET - Fetch users with pagination (admin only)
+export async function GET(request: NextRequest) {
   try {
-      const session = await getServerSession(authOptions);
-
+    const session = await getServerSession(authOptions);
     if (!session) {
       return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
     }
+    const { searchParams } = new URL(request.url);
+    const page = Number(searchParams.get("page")) || 1;
+    const pageSize = Number(searchParams.get("pageSize")) || PAGE_SIZE;
+    const skip = (page - 1) * pageSize;
 
-    const users = await prisma.user.findMany({
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+    const [items, totalCount] = await Promise.all([
+      prisma.user.findMany({
+        skip,
+        take: pageSize,
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          role: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      }),
+      prisma.user.count(),
+    ]);
 
-    return NextResponse.json(users);
+    const totalPages = Math.ceil(totalCount / pageSize);
+
+    return NextResponse.json({ items, totalPages, totalCount });
   } catch (error) {
     console.error("Error fetching users:", error);
     return NextResponse.json({ error: "Greška pri učitavanju korisnika" }, { status: 500 });

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { PAGE_SIZE } from "@/lib/constants";
 
 
 interface User {
@@ -74,45 +75,62 @@ export default function AdminPage() {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
+  // PAGINATION STATE
+  const [userPage, setUserPage] = useState(1);
+  const [userTotalPages, setUserTotalPages] = useState(1);
+  const [productPage, setProductPage] = useState(1);
+  const [productTotalPages, setProductTotalPages] = useState(1);
+  const [loadingUsers, setLoadingUsers] = useState(true);
+  const [loadingProducts, setLoadingProducts] = useState(true);
+
   useEffect(() => {
     if (status === "authenticated") {
-      fetchUsers();
-      fetchProducts();
+      setLoadingUsers(true);
+      setLoadingProducts(true);
+      fetchUsers(userPage);
+      fetchProducts(productPage);
       fetchOrders();
     }
-  }, [status]);
+  }, [status, userPage, productPage]);
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (pageNum = 1) => {
+    setLoadingUsers(true);
     try {
-      const response = await fetch("/api/users");
+      const response = await fetch(`/api/users?page=${pageNum}&pageSize=${PAGE_SIZE}`);
       if (response.ok) {
         const data = await response.json();
-        setUsers(data);
+        setUsers(data.items);
+        setUserTotalPages(data.totalPages || 1);
       } else {
         setError("Greška pri učitavanju korisnika");
       }
     } catch {
       setError("Greška pri učitavanju korisnika");
     } finally {
-      setLoading(false);
+      setLoadingUsers(false);
     }
   };
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (pageNum = 1) => {
+    setLoadingProducts(true);
     try {
-      const response = await fetch("/api/products");
+      const response = await fetch(`/api/products?page=${pageNum}&pageSize=${PAGE_SIZE}`);
       if (response.ok) {
         const data = await response.json();
-        setProducts(data);
+        setProducts(data.items);
+        setProductTotalPages(data.totalPages || 1);
       } else {
         setError("Greška pri učitavanju proizvoda");
       }
     } catch {
       setError("Greška pri učitavanju proizvoda");
+    } finally {
+      setLoadingProducts(false);
     }
   };
 
   const fetchOrders = async () => {
+    setLoading(true);
     try {
       const response = await fetch("/api/orders?admin=true");
       if (response.ok) {
@@ -123,6 +141,8 @@ export default function AdminPage() {
       }
     } catch {
       setError("Greška pri učitavanju porudžbina");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -143,7 +163,7 @@ export default function AdminPage() {
       if (response.ok) {
         setUserForm({ name: "", email: "", password: "", role: "user" });
         setEditingUser(null);
-        fetchUsers();
+        fetchUsers(userPage);
       } else {
         const data = await response.json();
         setError(data.error || "Greška pri čuvanju korisnika");
@@ -189,7 +209,7 @@ export default function AdminPage() {
         setProductForm({ name: "", price: "", image: "" });
         setEditingProduct(null);
         setSelectedFile(null);
-        fetchProducts();
+        fetchProducts(productPage);
       } else {
         const data = await response.json();
         setError(data.error || "Greška pri čuvanju proizvoda");
@@ -205,7 +225,7 @@ export default function AdminPage() {
     try {
       const response = await fetch(`/api/users/${id}`, { method: "DELETE" });
       if (response.ok) {
-        fetchUsers();
+        fetchUsers(userPage);
       } else {
         setError("Greška pri brisanju korisnika");
       }
@@ -220,7 +240,7 @@ export default function AdminPage() {
     try {
       const response = await fetch(`/api/products/${id}`, { method: "DELETE" });
       if (response.ok) {
-        fetchProducts();
+        fetchProducts(productPage);
       } else {
         setError("Greška pri brisanju proizvoda");
       }
@@ -426,7 +446,7 @@ export default function AdminPage() {
 
             <div className="bg-white rounded-lg shadow overflow-hidden">
               <h2 className="text-xl font-semibold p-6 border-b">Lista korisnika</h2>
-              {loading ? (
+              {loadingUsers ? (
                 <div className="p-6">Učitavam korisnike...</div>
               ) : (
                 <div className="overflow-x-auto">
@@ -509,6 +529,26 @@ export default function AdminPage() {
                       ))}
                     </tbody>
                   </table>
+                    {/* PAGINATION */}
+                    {userTotalPages > 1 && (
+                      <div className="flex justify-center mt-4 space-x-2">
+                        <button
+                          onClick={() => setUserPage((p) => Math.max(1, p - 1))}
+                          disabled={userPage === 1}
+                          className="px-3 py-1 rounded bg-gray-200 text-gray-700 disabled:opacity-50"
+                        >
+                          Prethodna
+                        </button>
+                        <span className="px-3 py-1">Strana {userPage} / {userTotalPages}</span>
+                        <button
+                          onClick={() => setUserPage((p) => Math.min(userTotalPages, p + 1))}
+                          disabled={userPage === userTotalPages}
+                          className="px-3 py-1 rounded bg-gray-200 text-gray-700 disabled:opacity-50"
+                        >
+                          Sledeća
+                        </button>
+                      </div>
+                    )}
                 </div>
               )}
             </div>
@@ -628,42 +668,99 @@ export default function AdminPage() {
 
             <div className="bg-white rounded-lg shadow overflow-hidden">
               <h2 className="text-xl font-semibold p-6 border-b">Lista proizvoda</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-                {products.map((product) => (
-                  <div key={product.id} className="border rounded-lg p-4">
-                    {product.image && (
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        width={300}
-                        height={200}
-                        className="w-full h-48 object-cover rounded-md mb-4"
-                      />
-                    )}
-                    <h3 className="text-lg font-semibold">{product.name}</h3>
-                    <p className="text-xl font-bold text-green-600">
-                      {product.price.toFixed(2)} EUR
-                    </p>
-                    <p className="text-sm text-gray-500 mb-4">
-                      Kreiran: {new Date(product.createdAt).toLocaleDateString()}
-                    </p>
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() => editProduct(product)}
-                        className="bg-indigo-600 text-white px-3 py-1 rounded text-sm hover:bg-indigo-700"
-                      >
-                        Uredi
-                      </button>
-                      <button
-                        onClick={() => deleteProduct(product.id)}
-                        className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
-                      >
-                        Obriši
+              {loadingProducts ? (
+                <div className="p-6">Učitavam proizvode...</div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Slika
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Naziv
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Cena
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Kreiran
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Akcije
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {products.map((product) => (
+                        <tr key={product.id}>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {product.image ? (
+                              <Image
+                                src={product.image}
+                                alt={product.name}
+                                width={40}
+                                height={40}
+                                className="rounded-md object-cover"
+                              />
+                            ) : (
+                              <div className="w-10 h-10 bg-gray-300 rounded-md flex items-center justify-center">
+                                <svg className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M4 4h12v12H4V4zm2 2v8h8V6H6z" clipRule="evenodd" />
+                                </svg>
+                              </div>
+                            )}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {product.name}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {product.price.toFixed(2)} EUR
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {new Date(product.createdAt).toLocaleDateString()}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                            <button
+                              onClick={() => editProduct(product)}
+                              className="text-indigo-600 hover:text-indigo-900"
+                            >
+                              Uredi
+                            </button>
+                            <button
+                              onClick={() => deleteProduct(product.id)}
+                              className="text-red-600 hover:text-red-900"
+                            >
+                              Obriši
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                      </tbody>
+                    </table>
+                    {/* PAGINATION */}
+                    {productTotalPages > 1 && (
+                      <div className="flex justify-center mt-4 space-x-2">
+                        <button
+                          onClick={() => setProductPage((p) => Math.max(1, p - 1))}
+                          disabled={productPage === 1}
+                          className="px-3 py-1 rounded bg-gray-200 text-gray-700 disabled:opacity-50"
+                        >
+                          Prethodna
+                        </button>
+                        <span className="px-3 py-1">Strana {productPage} / {productTotalPages}</span>
+                        <button
+                          onClick={() => setProductPage((p) => Math.min(productTotalPages, p + 1))}
+                          disabled={productPage === productTotalPages}
+                          className="px-3 py-1 rounded bg-gray-200 text-gray-700 disabled:opacity-50"
+                        >
+                          Sledeća
                       </button>
                     </div>
+                    )}
                   </div>
-                ))}
-              </div>
+              )}
             </div>
           </div>
         )}

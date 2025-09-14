@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useCart } from "../../components/CartContext";
+import { PAGE_SIZE } from "@/lib/constants";
 
 interface Product {
   id: string;
@@ -23,17 +24,22 @@ export default function ProductsPage() {
   const [error, setError] = useState("");
   const [addingToCart, setAddingToCart] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    setLoading(true);
+    fetchProducts(page);
+  }, [page]);
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (pageNum = 1) => {
+    setLoading(true);
     try {
-      const response = await fetch("/api/products");
+      const response = await fetch(`/api/products?page=${pageNum}&pageSize=${PAGE_SIZE}`);
       if (response.ok) {
         const data = await response.json();
-        setProducts(data);
+        setProducts(data.items);
+        setTotalPages(data.totalPages || 1);
       } else {
         setError("Greška pri učitavanju proizvoda");
       }
@@ -165,9 +171,29 @@ export default function ProductsPage() {
             ))}
           </div>
         )}
+
+        {/* Paginacija */}
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-8 space-x-2">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="px-3 py-1 rounded bg-gray-200 text-gray-700 disabled:opacity-50"
+            >
+              Prethodna
+            </button>
+            <span className="px-3 py-1">Strana {page} / {totalPages}</span>
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="px-3 py-1 rounded bg-gray-200 text-gray-700 disabled:opacity-50"
+            >
+              Sledeća
+            </button>
+          </div>
+        )}
       </div>
-      {/* ...search input i dugme... */}
-     
+      {/* ...existing code... */}
     </div>
   );
 }
