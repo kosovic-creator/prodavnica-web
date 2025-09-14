@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 
 async function getProduct(id: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"||"https://prodavnica-web.vercel.app";
+  const baseUrl ="https://prodavnica-web.vercel.app";
   const res = await fetch(`${baseUrl}/api/products/${id}`, { cache: "no-store" });
   if (!res.ok) return null;
   return res.json();
