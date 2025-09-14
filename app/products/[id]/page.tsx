@@ -3,7 +3,10 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 
 async function getProduct(id: string) {
-  const baseUrl ="https://prodavnica-web.vercel.app";
+  const baseUrl =
+    process.env.NODE_ENV === "production"
+      ? "https://prodavnica-web.vercel.app"
+      : "http://localhost:3000";
   const res = await fetch(`${baseUrl}/api/products/${id}`, { cache: "no-store" });
   if (!res.ok) return null;
   return res.json();
