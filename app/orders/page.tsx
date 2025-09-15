@@ -34,6 +34,9 @@ function OrdersContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const PAGE_SIZE = 5;
 
   useEffect(() => {
     if (searchParams && searchParams.get('success') === 'true') {
@@ -43,19 +46,22 @@ function OrdersContent() {
 
   useEffect(() => {
     if (session) {
-      fetchOrders();
+      fetchOrders(page);
     }
-  }, [session]);
+  }, [session, page]);
 
-  const fetchOrders = async () => {
+  const fetchOrders = async (pageNum = 1) => {
     try {
-      const response = await fetch("/api/orders");
+      const response = await fetch(`/api/orders?page=${pageNum}&pageSize=${PAGE_SIZE}`);
       if (response.ok) {
-
         const data = await response.json();
-        setOrders(data);
-        console.log('porudzbine su :', data);
-
+        if (Array.isArray(data)) {
+          setOrders(data);
+          setTotalPages(1);
+        } else {
+          setOrders(data.items || []);
+          setTotalPages(data.totalPages || 1);
+        }
       } else {
         setError("Greška pri učitavanju porudžbina");
       }
@@ -213,6 +219,26 @@ function OrdersContent() {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {orders.length > 0 && (
+          <div className="flex justify-center mt-8">
+            <button
+              className="px-4 py-2 mx-2 bg-gray-200 rounded disabled:opacity-50"
+              onClick={() => setPage(page - 1)}
+              disabled={page === 1}
+            >
+              Prethodna
+            </button>
+            <span className="px-4 py-2">Strana {page} od {totalPages}</span>
+            <button
+              className="px-4 py-2 mx-2 bg-gray-200 rounded disabled:opacity-50"
+              onClick={() => setPage(page + 1)}
+              disabled={page === totalPages}
+            >
+              Sledeća
+            </button>
           </div>
         )}
       </div>

@@ -4,33 +4,15 @@ import { getServerSession } from "next-auth/next";
 import prisma from "@/lib/prisma";
 import { authOptions } from "@/lib/authOptions";
 import { sendOrderConfirmationEmail } from "@/controlers/orderController";
-import { PAGE_SIZE } from "@/lib/constants";
-import { z } from "zod";
 
-const orderSchema = z.object({
-  userId: z.string().min(1),
-  cartItems: z.array(z.object({
-    productId: z.string().min(1),
-    quantity: z.number().int().positive(),
-    price: z.number().positive(),
-  })).min(1),
-});
 
-export async function POST(request: NextRequest) {
+
+export async function POST() {
   try {
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.email) {
       return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
-    }
-
-    const body = await request.json();
-
-    // Zod validacija za porudžbinu
-    const parse = orderSchema.safeParse(body);
-
-    if (!parse.success) {
-      return NextResponse.json({ error: parse.error.errors[0].message }, { status: 400 });
     }
 
     // Find user
@@ -92,7 +74,7 @@ export async function POST(request: NextRequest) {
 
     // Dodaj poziv funkcije ovdje:
 
-    await sendOrderConfirmationEmail(session.user.email, parseInt(result.order.id, 10));
+await sendOrderConfirmationEmail(session.user.email, parseInt(result.order.id, 10));
 
     return NextResponse.json({ message: "Porudžbina potvrđena", order: result.order });
 
@@ -102,23 +84,19 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET - Fetch orders with pagination (admin only)
 export async function GET(request: NextRequest) {
   try {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
+    }
+
+    // Check if user is admin (for admin access to all orders)
     const { searchParams } = new URL(request.url);
-    const page = Number(searchParams.get("page")) || 1;
-    const pageSize = Number(searchParams.get("pageSize")) || PAGE_SIZE;
-    const skip = (page - 1) * pageSize;
     const isAdmin = searchParams.get('admin') === 'true';
 
     if (isAdmin) {
-    // Check if user is admin (for admin access to all orders)
-      const session = await getServerSession(authOptions);
-
-      if (!session?.user?.email) {
-        return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
-      }
-
       const user = await prisma.user.findUnique({
         where: { email: session.user.email },
         select: { role: true },
@@ -128,29 +106,24 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 403 });
       }
 
-      // Get all orders for admin with pagination
-      const [items, totalCount] = await Promise.all([
-        prisma.order.findMany({
-          skip,
-          take: pageSize,
-          include: {
-            user: { select: { id: true, name: true, email: true } },
-            orderItems: { include: { product: true } },
+      // Get all orders for admin
+      const orders = await prisma.order.findMany({
+        include: {
+          user: {
+            select: { id: true, name: true, email: true },
           },
-          orderBy: { createdAt: 'desc' },
-        }),
-        prisma.order.count(),
-      ]);
-      const totalPages = Math.ceil(totalCount / pageSize);
-      return NextResponse.json({ items, totalPages, totalCount });
+          orderItems: {
+            include: {
+              product: true,
+            },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+      });
+
+      return NextResponse.json(orders);
 
     } else {
-      const session = await getServerSession(authOptions);
-
-      if (!session?.user?.email) {
-        return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
-      }
-
       // Get orders for current user
       const user = await prisma.user.findUnique({
         where: { email: session.user.email },
@@ -181,4 +154,3 @@ export async function GET(request: NextRequest) {
   }
 
 }
-
