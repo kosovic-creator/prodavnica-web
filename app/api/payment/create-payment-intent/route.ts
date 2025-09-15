@@ -59,6 +59,12 @@ export async function POST(req: NextRequest) {
       await sendConfirmationEmail(userEmail, finalAmount);
     }
 
+    // Ažuriraj status porudžbine na 'completed'
+    await prisma.order.update({
+      where: { id: orderId },
+      data: { status: 'completed' },
+    });
+
     return NextResponse.json({ clientSecret: paymentIntent.client_secret });
   } catch (err: unknown) {
     const errorMessage =
