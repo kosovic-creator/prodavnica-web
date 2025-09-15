@@ -5,13 +5,32 @@ import prisma from "@/lib/prisma";
 import { authOptions } from "@/lib/authOptions";
 import { sendOrderConfirmationEmail } from "@/controlers/orderController";
 import { PAGE_SIZE } from "@/lib/constants";
+import { z } from "zod";
 
-export async function POST() {
+const orderSchema = z.object({
+  userId: z.string().min(1),
+  cartItems: z.array(z.object({
+    productId: z.string().min(1),
+    quantity: z.number().int().positive(),
+    price: z.number().positive(),
+  })).min(1),
+});
+
+export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.email) {
       return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
+    }
+
+    const body = await request.json();
+
+    // Zod validacija za porudžbinu
+    const parse = orderSchema.safeParse(body);
+
+    if (!parse.success) {
+      return NextResponse.json({ error: parse.error.errors[0].message }, { status: 400 });
     }
 
     // Find user

@@ -8,25 +8,22 @@ import {
   generateVerificationEmailHtml,
   generateVerificationEmailText
 } from "@/lib/email";
+import { z } from "zod";
+
+const registerSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+  password: z.string().min(6)
+});
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, email, password } = await request.json();
-
-    // Validate input
-    if (!name || !email || !password) {
-      return NextResponse.json(
-        { error: "Sva polja su obavezna" },
-        { status: 400 }
-      );
+    const body = await request.json();
+    const parse = registerSchema.safeParse(body);
+    if (!parse.success) {
+      return NextResponse.json({ error: parse.error.errors[0].message }, { status: 400 });
     }
-
-    if (password.length < 6) {
-      return NextResponse.json(
-        { error: "Lozinka mora imati najmanje 6 karaktera" },
-        { status: 400 }
-      );
-    }
+    const { name, email, password } = parse.data;
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({

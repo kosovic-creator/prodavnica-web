@@ -4,6 +4,14 @@ import bcrypt from "bcryptjs";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
 import { PAGE_SIZE } from "@/lib/constants";
+import { z } from "zod";
+
+const userSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+  password: z.string().min(6),
+  role: z.string().min(1).optional(),
+});
 
 // GET - Fetch users with pagination (admin only)
 export async function GET(request: NextRequest) {
@@ -46,7 +54,12 @@ export async function GET(request: NextRequest) {
 // POST - Create new user
 export async function POST(request: NextRequest) {
   try {
-    const { name, email, password, role = "user" } = await request.json();
+    const body = await request.json();
+    const parse = userSchema.safeParse(body);
+    if (!parse.success) {
+      return NextResponse.json({ error: parse.error.errors[0].message }, { status: 400 });
+    }
+    const { name, email, password, role = "user" } = parse.data;
 
     if (!name || !email || !password) {
       return NextResponse.json(
