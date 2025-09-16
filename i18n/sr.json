@@ -1,8 +1,15 @@
 {
-  "welcome": "Dobrodošli u našu prodavnicu",
-  "login": "Prijava",
+  "home": {
+    "welcome": "Dobrodošli u našu prodavnicu"
+  },
+  "login": {
+    "login": "Prijava",
+    "success": "Uspješno ste se prijavili"
+  },
   "logout": "Odjava",
   "greeting": "Dobrodošli, {{name}}",
   "hello": "Zdravo",
-  "successfully logged in": "Uspješno ste se prijavili"
+  "cart": {
+    "cart": "Korpa"
+  }
 }

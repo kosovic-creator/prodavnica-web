@@ -32,7 +32,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
 
   const [results, setResults] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('home'); // koristi home namespace
 
   const handleLogout = async () => {
     await signOut({ callbackUrl: "/" });

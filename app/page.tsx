@@ -7,11 +7,10 @@ import { useTranslation } from "react-i18next";
 
 export default function Home() {
   const { data: session } = useSession();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation('home'); // koristi home namespace
  console.log('to je :', process.env.EMAIL_PASS);
   return (
     <div className="min-h-screen bg-gray-50">
-
       <main className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900 mb-8">
@@ -23,7 +22,7 @@ export default function Home() {
                 {t("hello")}  {session.user?.name || session.user?.email}!
               </p>
               <p className="text-gray-600">
-                {t("successfully logged in")}
+                {t("success")}
               </p>
             </div>
           ) : (

@@ -1,0 +1,11 @@
+{
+  "welcome": "Welcome in our store",
+  "description": "Here you can find the best products.",
+  "login": {
+    "title": "Login",
+    "success": "You have successfully logged in."
+  },
+  "greeting": "Welcome, {{name}}",
+  "success": "You have successfully logged in."
+
+}
