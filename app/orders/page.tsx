@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-
+import { useTranslation } from "react-i18next";
 
 
 interface OrderItem {
@@ -37,12 +37,13 @@ function OrdersContent() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const PAGE_SIZE = 5;
+  const { t } = useTranslation('orders');
 
   useEffect(() => {
     if (searchParams && searchParams.get('success') === 'true') {
-      setSuccess("Porudžbina je uspešno kreirana!");
+      setSuccess(t("orderSuccess"));
     }
-  }, [searchParams]);
+  }, [searchParams, t]);
 
   useEffect(() => {
     if (session) {
@@ -63,10 +64,10 @@ function OrdersContent() {
           setTotalPages(data.totalPages || 1);
         }
       } else {
-        setError("Greška pri učitavanju porudžbina");
+        setError(t("fetchError"));
       }
     } catch {
-      setError("Greška pri učitavanju porudžbina");
+      setError(t("fetchError"));
     } finally {
       setLoading(false);
     }
@@ -75,16 +76,15 @@ function OrdersContent() {
   if (!session) {
     return (
       <div className="min-h-screen bg-gray-50">
-
         <div className="max-w-7xl mx-auto py-12 px-4">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Vaše porudžbine</h1>
-            <p className="text-gray-600 mb-4">Morate biti prijavljeni da vidite porudžbine.</p>
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">{t("yourOrders")}</h1>
+            <p className="text-gray-600 mb-4">{t("mustBeLoggedIn")}</p>
             <Link
               href="/login"
               className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition duration-200"
             >
-              Prijavite se
+              {t("login")}
             </Link>
           </div>
         </div>
@@ -95,9 +95,8 @@ function OrdersContent() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-
         <div className="flex items-center justify-center py-12">
-          <div className="text-lg">Učitavam porudžbine...</div>
+          <div className="text-lg">{t("loadingOrders")}</div>
         </div>
       </div>
     );
@@ -105,34 +104,30 @@ function OrdersContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-
       <div className="max-w-7xl mx-auto py-12 px-4">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Vaše porudžbine</h1>
-          <p className="text-gray-600 mt-2">Pregled svih vaših prethodnih porudžbina</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t("yourOrders")}</h1>
+          <p className="text-gray-600 mt-2">{t("ordersOverview")}</p>
         </div>
-
         {success && (
           <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
             {success}
           </div>
         )}
-
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
             {error}
           </div>
         )}
-
         {orders.length === 0 ? (
           <div className="text-center py-12">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Nemate porudžbine</h2>
-            <p className="text-gray-600 mb-6">Počnite kupovinu da biste videli vaše porudžbine ovde.</p>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">{t("noOrders")}</h2>
+            <p className="text-gray-600 mb-6">{t("startShopping")}</p>
             <Link
               href="/products"
               className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition duration-200"
             >
-              Pogledajte proizvode
+              {t("viewProducts")}
             </Link>
           </div>
         ) : (
@@ -142,7 +137,7 @@ function OrdersContent() {
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900">
-                      Porudžbina #{order.id.slice(-8)}
+                      {t("order")} #{order.id.slice(-8)}
                     </h3>
                     <p className="text-sm text-gray-600">
                       {new Date(order.createdAt).toLocaleDateString('sr-RS', {
@@ -163,7 +158,7 @@ function OrdersContent() {
                         ? 'bg-green-100 text-green-800'
                         : 'bg-yellow-100 text-yellow-800'
                     }`}>
-                      {order.status === 'completed' ? 'Završeno' : order.status}
+                      {order.status === 'completed' ? t("completed") : order.status}
                     </span>
                     {/* Dodaj dugme za plaćanje ako nije završeno */}
                     {order.status !== 'completed' ? (
@@ -176,16 +171,15 @@ function OrdersContent() {
                           if (order.status === 'completed') e.preventDefault();
                         }}
                       >
-                        Plati
+                        {t("pay")}
                       </Link>
                     ) : (
                       <span className="text-gray-600 text-xs"></span>
                     )}
                   </div>
                 </div>
-
                 <div className="border-t pt-4">
-                  <h4 className="font-medium text-gray-900 mb-3">Stavke porudžbine:</h4>
+                  <h4 className="font-medium text-gray-900 mb-3">{t("orderItems")}</h4>
                   <div className="space-y-3">
                     {order.orderItems.map((item) => (
                       <div key={item.id} className="flex items-center space-x-4">
@@ -199,13 +193,13 @@ function OrdersContent() {
                           />
                         ) : (
                           <div className="w-15 h-15 bg-gray-200 rounded-md flex items-center justify-center">
-                            <span className="text-gray-500 text-xs">Nema slike</span>
+                              <span className="text-gray-500 text-xs">{t("noImage")}</span>
                           </div>
                         )}
                         <div className="flex-1">
                           <h5 className="font-medium text-gray-900">{item.product.name}</h5>
                           <p className="text-sm text-gray-600">
-                            Količina: {item.quantity} × {item.price.toFixed(2)} EUR
+                            {t("quantity")}: {item.quantity} × {item.price.toFixed(2)} EUR
                           </p>
                         </div>
                         <div className="text-right">
@@ -221,7 +215,6 @@ function OrdersContent() {
             ))}
           </div>
         )}
-
         {orders.length > 0 && (
           <div className="flex justify-center mt-8">
             <button
@@ -229,15 +222,16 @@ function OrdersContent() {
               onClick={() => setPage(page - 1)}
               disabled={page === 1}
             >
-              Prethodna
+              {t("previous")}
             </button>
-            <span className="px-4 py-2">Strana {page} od {totalPages}</span>
+            <span className="px-4 py-2">{t("page")}
+              {page} {t("of")} {totalPages}</span>
             <button
               className="px-4 py-2 mx-2 bg-gray-200 rounded disabled:opacity-50"
               onClick={() => setPage(page + 1)}
               disabled={page === totalPages}
             >
-              Sledeća
+              {t("next")}
             </button>
           </div>
         )}
