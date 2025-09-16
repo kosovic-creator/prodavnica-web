@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Navigation from "../../components/Navigation";
+
 
 interface UserProfile {
   id: string;
@@ -143,7 +143,7 @@ export default function ProfilePage() {
         });
         setSelectedFile(null);
         setSuccess("Profil je uspešno ažuriran!");
-        
+
         // Update session to reflect changes
         await update({
           ...session,
@@ -165,7 +165,7 @@ export default function ProfilePage() {
   if (status === "loading" || loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
+
         <div className="flex items-center justify-center py-12">
           <div className="text-lg">Učitavam...</div>
         </div>
@@ -179,7 +179,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
+     
       <div className="max-w-2xl mx-auto py-12 px-4">
         <div className="bg-white rounded-lg shadow-md p-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-8">Moj Profil</h1>
@@ -285,8 +285,8 @@ export default function ProfilePage() {
                       Uloga
                     </label>
                     <span className={`inline-flex px-2 py-1 rounded-full text-xs font-semibold ${
-                      profile.role === 'admin' 
-                        ? 'bg-red-100 text-red-800' 
+                      profile.role === 'admin'
+                        ? 'bg-red-100 text-red-800'
                         : 'bg-green-100 text-green-800'
                     }`}>
                       {profile.role}
@@ -309,8 +309,8 @@ export default function ProfilePage() {
                 type="submit"
                 disabled={uploadingImage}
                 className={`flex-1 py-2 px-4 rounded-md text-white font-medium ${
-                  uploadingImage 
-                    ? "bg-gray-400 cursor-not-allowed" 
+                  uploadingImage
+                    ? "bg-gray-400 cursor-not-allowed"
                     : "bg-indigo-600 hover:bg-indigo-700"
                 }`}
               >
