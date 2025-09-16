@@ -168,7 +168,7 @@ function OrdersContent() {
                     {/* Dodaj dugme za plaćanje ako nije završeno */}
                     {order.status !== 'completed' ? (
                       <Link
-                        href={`/placanje?orderId=${order.id}`}
+                        href={`/payment?orderId=${order.id}`}
                         className={`ml-4 px-4 py-1 rounded ${order.status === 'completed' ? 'bg-gray-400 text-gray-300 cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}
                         aria-disabled={order.status === 'completed'}
                         tabIndex={order.status === 'completed' ? -1 : 0}

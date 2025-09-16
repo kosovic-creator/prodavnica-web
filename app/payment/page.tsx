@@ -48,25 +48,29 @@ function PlacanjePageContent() {
   };
 
   return (
-    <div>
-      {paymentSuccess ? (
-        <>
-          <div style={{ color: 'green', margin: '10px 0' }}>
-            Plaćanje je uspješno! Potvrda je poslata na vaš email.
-          </div>
-          <Link href="/" style={{ color: 'blue', textDecoration: 'underline' }}>Povratak na početnu stranu</Link>
-        </>
-      ) : (
-        <>
-          <h2>Plaćanje</h2>
-          {orderAmount && <div>Iznos za plaćanje: {orderAmount.toFixed(2)} EUR</div>}
-          {clientSecret && (
-            <Elements stripe={stripePromise} options={options}>
-              <CheckoutForm clientSecret={clientSecret} onSuccess={() => setPaymentSuccess(true)} />
-            </Elements>
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+        {paymentSuccess ? (
+          <>
+            <div className="text-green-600 text-lg font-semibold mb-4 text-center">
+              Plaćanje je uspješno! Potvrda je poslata na vaš email.
+            </div>
+            <Link href="/" className="block text-center text-blue-600 hover:underline font-medium mt-4">
+              Povratak na početnu stranu
+            </Link>
+          </>
+        ) : (
+          <>
+              <h2 className="text-2xl font-bold text-center mb-6">Plaćanje</h2>
+              {orderAmount && <div className="text-lg text-center mb-4">Iznos za plaćanje: <span className="font-semibold">{orderAmount.toFixed(2)} EUR</span></div>}
+              {clientSecret && (
+                <Elements stripe={stripePromise} options={options}>
+                  <CheckoutForm clientSecret={clientSecret} onSuccess={() => setPaymentSuccess(true)} />
+                </Elements>
             )}
           </>
-      )}
+        )}
+      </div>
     </div>
   );
 }
