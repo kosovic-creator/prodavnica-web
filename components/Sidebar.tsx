@@ -13,6 +13,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { Session } from "next-auth";
 import NextAuth from "next-auth";
+import { useTranslation } from "react-i18next";
+import '../i18n/i18n';
 
 declare module "next-auth" {
   interface User {
@@ -39,6 +41,7 @@ export default function Sidebar({
   handleLogout,
   session,
 }: SidebarProps) {
+  const { t } = useTranslation('side');
   return (
     <div className="fixed top-0 left-0 h-full w-64 bg-white text-gray-900 flex flex-col shadow-lg z-50">
       <button
@@ -49,14 +52,14 @@ export default function Sidebar({
       </button>
       <div className="p-6 text-2xl font-bold border-b border-gray-200 text-left flex items-center gap-2">
         <Bars3Icon className="h-6 w-6 text-gray-600" />
-        Meni
+        {t("menu")}
       </div>
       <nav className="flex-1 p-4">
         <ul className="space-y-4 items-start flex flex-col">
           <li>
             <Link href="/" className="flex items-center space-x-2 hover:bg-gray-100 rounded px-3 py-2">
               <HomeIcon className="h-5 w-5 text-gray-600" />
-              <span>Početna</span>
+              <span>{t("home")}</span>
             </Link>
           </li>
           <li>
@@ -65,14 +68,14 @@ export default function Sidebar({
               className="flex items-center space-x-2 hover:bg-gray-100 rounded px-3 py-2"
             >
               <ShoppingBagIcon className="h-5 w-5 text-gray-600" />
-              <span>Proizvodi</span>
+              <span>{t("products")}</span>
             </Link>
           </li>
 
           <li>
             <a href="/orders" className="flex items-center space-x-2 hover:bg-gray-100 rounded px-3 py-2">
               <ClipboardIcon className="h-5 w-5 text-gray-600" />
-              <span>Porudžbine</span>
+              <span>{t("orders")}</span>
             </a>
           </li>
           <li>
@@ -81,7 +84,7 @@ export default function Sidebar({
               className="hover:bg-gray-100 rounded px-3 py-2 flex items-center gap-2"
             >
               <UserIcon className="h-5 w-5" />
-              Profil
+              {t("profile")}
             </Link>
           </li>
         </ul>
@@ -92,7 +95,7 @@ export default function Sidebar({
               className="flex items-center gap-2 text-red-700 px-3 py-2 rounded-md transition duration-200 w-full justify-start"
             >
               <ArrowRightOnRectangleIcon className="h-5 w-5" />
-              Odjava
+              {t("logout")}
             </button>
           ) : (
             <>
@@ -101,14 +104,14 @@ export default function Sidebar({
                   className="flex items-center gap-2 text-green-700 hover:text-green-500 px-3 py-2 rounded-md transition duration-200 w-full justify-start"
               >
                 <ArrowLeftOnRectangleIcon className="h-5 w-5" />
-                Prijava
+                  {t("login")}
               </Link>
               <Link
                 href="/register"
                   className="flex items-center gap-2 text-blue-950 px-3 py-2 rounded-md transition duration-200 w-full justify-start"
               >
                 <PlusCircleIcon className="h-5 w-5" />
-                  Registracija
+                  {t("register")}
               </Link>
             </>
           )}
