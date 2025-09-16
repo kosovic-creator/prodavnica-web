@@ -8,7 +8,12 @@ import { z } from "zod";
 const productSchema = z.object({
   name: z.string().min(3, "Ime mora imati najmanje 3 karaktera"),
   price: z.number().positive("Cena mora biti pozitivan broj"),
-  image: z.string().url().optional().or(z.literal("")).or(z.null()),
+  image: z.string()
+    .url()
+    .or(z.string().regex(/^\/uploads\//, "Slika mora biti validan URL ili path koji počinje sa /uploads/"))
+    .optional()
+    .or(z.literal(""))
+    .or(z.null()),
 });
 
 // GET - Fetch products with pagination
