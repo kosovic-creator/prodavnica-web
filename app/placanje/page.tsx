@@ -9,6 +9,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import CheckoutForm from '@/components/CheckoutForm';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 const stripePromise = loadStripe('pk_test_51QzXjhGsYKIy68At6fXHC8XTKOsEwwPcC8M3bkQaaSFFmgSymnndIqk2ZJD8xEtNDWF2TdYPyfd6Ah7j0XYgKT1z005tFoGnFq'); // koristi svoj publishable key
 
@@ -48,17 +49,23 @@ function PlacanjePageContent() {
 
   return (
     <div>
-      <h2>Plaćanje</h2>
-      {orderAmount && <div>Iznos za plaćanje: {orderAmount.toFixed(2)} EUR</div>}
-      {paymentSuccess && (
-        <div style={{ color: 'green', margin: '10px 0' }}>
-          Plaćanje je uspješno! Potvrda je poslata na vaš email.
-        </div>
-      )}
-      {clientSecret && (
-        <Elements stripe={stripePromise} options={options}>
-          <CheckoutForm clientSecret={clientSecret} onSuccess={() => setPaymentSuccess(true)} />
-        </Elements>
+      {paymentSuccess ? (
+        <>
+          <div style={{ color: 'green', margin: '10px 0' }}>
+            Plaćanje je uspješno! Potvrda je poslata na vaš email.
+          </div>
+          <Link href="/" style={{ color: 'blue', textDecoration: 'underline' }}>Povratak na početnu stranu</Link>
+        </>
+      ) : (
+        <>
+          <h2>Plaćanje</h2>
+          {orderAmount && <div>Iznos za plaćanje: {orderAmount.toFixed(2)} EUR</div>}
+          {clientSecret && (
+            <Elements stripe={stripePromise} options={options}>
+              <CheckoutForm clientSecret={clientSecret} onSuccess={() => setPaymentSuccess(true)} />
+            </Elements>
+            )}
+          </>
       )}
     </div>
   );

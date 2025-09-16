@@ -37,8 +37,14 @@ export async function POST(req: NextRequest) {
     const order = await prisma.order.findUnique({
       where: { id: orderId },
       select: {
+        id: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true,
+        status: true,
+        userId: true,
         total: true,
-        email: true, // Dodajte ovo!
+        paymentIntentId: true, // Dodaj polje za PaymentIntent
       },
     });
     if (!order) {
@@ -46,30 +52,33 @@ export async function POST(req: NextRequest) {
     }
     finalAmount = Math.round(order.total * 100); // Stripe amount in cents
     const session = await getServerSession();
-    userEmail = session?.user?.email ?? ''; // Pretpostavljamo da 'email' postoji u modelu Order
-    // userEmail = order.email; // Removed because 'email' does not exist on order
-  try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: finalAmount,
-      currency,
-    });
-
-    // Pošalji email korisniku
-    if (userEmail) {
-      await sendConfirmationEmail(userEmail, finalAmount);
+    userEmail = session?.user?.email ?? '';
+    // Proveri da li već postoji PaymentIntent
+    if (order.paymentIntentId) {
+      // Vrati postojeći clientSecret
+      const existingIntent = await stripe.paymentIntents.retrieve(order.paymentIntentId);
+      return NextResponse.json({ clientSecret: existingIntent.client_secret });
     }
-
-    // Ažuriraj status porudžbine na 'completed'
-    await prisma.order.update({
-      where: { id: orderId },
-      data: { status: 'completed' },
-    });
-
-    return NextResponse.json({ clientSecret: paymentIntent.client_secret });
-  } catch (err: unknown) {
-    const errorMessage =
-      err instanceof Error ? err.message : 'An unknown error occurred';
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    try {
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: finalAmount,
+        currency,
+        metadata: { orderId },
+      });
+      // Sačuvaj PaymentIntentId u bazi
+      await prisma.order.update({
+        where: { id: orderId },
+        data: { paymentIntentId: paymentIntent.id },
+      });
+      // Pošalji email potvrdu korisniku
+      if (userEmail) {
+        await sendConfirmationEmail(userEmail, finalAmount);
+      }
+      return NextResponse.json({ clientSecret: paymentIntent.client_secret });
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'An unknown error occurred';
+      return NextResponse.json({ error: errorMessage }, { status: 500 });
+    }
   }
-}
 }
