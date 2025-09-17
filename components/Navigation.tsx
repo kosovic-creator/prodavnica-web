@@ -89,7 +89,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
         >
           <Bars3Icon className="h-8 w-8" />
         </button>
-        <span className="text-gray-700">
+        <span className="text-gray-700 hidden sm:block">
           {session?.user?.name || session?.user?.email}
         </span>
       </div>
