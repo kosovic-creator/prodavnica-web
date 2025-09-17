@@ -95,8 +95,8 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
       </div>
       {/* Search bar sa ikonicom */}
       {!!session && (
-        <form onSubmit={handleSearch} className="flex-1 flex justify-center">
-          <div className="relative w-80 sm:w-96 md:w-[300px] lg:w-[300px]">
+        <form onSubmit={handleSearch} className="flex justify-center w-full">
+          <div className="relative w-80 sm:w-96 md:w-[300px] lg:w-[300px] mx-auto">
             <input
               type="text"
               value={query}
@@ -109,53 +109,57 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
         </form>
       )}
       <div className="flex items-center gap-4 justify-end w-full">
-        {session ? (
-          session.user.role === 'admin' ? (
-            <>
-              <span className="text-gray-700 hidden sm:block pr-5">
-                {session.user.name || session.user.email}
-              </span>
-            </>
-          ) : (
-            <>
-              {session.user.role === 'admin' && null}
-              <Link
-                href="/cart"
-                className="relative text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
-              >
-                <ShoppingCartIcon className="h-6 w-6" />
-                {cart.itemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    {cart.itemCount}
-                  </span>
-                )}
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 text-red-700 px-3 py-2 rounded-md transition duration-200"
-              >
-                <ArrowRightOnRectangleIcon className="h-5 w-5" />
+        {session && session.user.role !== 'admin' && (
+          <span className="text-gray-700 hidden sm:block pr-5">
+            {session.user.name || session.user.email}
+          </span>
+        )}
+        {(!session || session.user.role === 'admin') && (
+          <div className="flex items-center gap-2 ml-auto">
+            {!session ? (
+              <>
+                <Link
+                  href="/login"
+                  className="flex items-center gap-2 text-green-700 hover:text-green-500 px-3 py-2 rounded-md transition duration-200"
+                >
+                  <ArrowLeftOnRectangleIcon className="h-5 w-5" />
+                  {tNav("login")}
+                </Link>
+                <Link
+                  href="/register"
+                  className="flex items-center gap-2 text-blue-950 px-3 py-2 rounded-md transition duration-200"
+                >
+                  <PlusCircleIcon className="h-5 w-5" />
+                  {tNav("register")}
+                </Link>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 text-red-700 px-3 py-2 rounded-md transition duration-200"
+                >
+                  <ArrowRightOnRectangleIcon className="h-5 w-5" />
                   {tNav("logout")}
                 </button>
               </>
-            )
-        ) : (
-            <div className="flex items-center gap-2 ml-auto">
-              <Link
-                href="/login"
-                className="flex items-center gap-2 text-green-700 hover:text-green-500 px-3 py-2 rounded-md transition duration-200"
-              >
-                <ArrowLeftOnRectangleIcon className="h-5 w-5" />
-                {tNav("login")}
-              </Link>
-              <Link
-                href="/register"
-                className="flex items-center gap-2 text-blue-950 px-3 py-2 rounded-md transition duration-200"
-              >
-                <PlusCircleIcon className="h-5 w-5" />
-                {tNav("register")}
-              </Link>
-            </div>
+            )}
+          </div>
+        )}
+        {session && (
+          <>
+            <Link
+              href="/cart"
+              className="relative text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
+            >
+              <ShoppingCartIcon className="h-6 w-6" />
+              {cart.itemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {cart.itemCount}
+                </span>
+              )}
+            </Link>
+          </>
         )}
       </div>
       <div className="flex gap-1">
