@@ -36,7 +36,7 @@ model Product {
   name       String
   price      Float
   image      String?
-  createdAt  DateTime    @default(now())
+  description String?
   updatedAt  DateTime    @updatedAt
   cartItems  CartItem[]
   orderItems OrderItem[]
@@ -79,6 +79,7 @@ model OrderItem {
   productId String
   quantity  Int
   price     Float    // Cena u vreme kupovine
+  description String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -86,4 +87,11 @@ model OrderItem {
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@index([orderId])
+}
+
+model ProductDetail {
+  id          String   @id @default(uuid())
+  description String
+  price       Float
+  image       String?
 }

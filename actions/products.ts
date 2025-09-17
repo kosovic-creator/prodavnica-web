@@ -50,4 +50,3 @@ export async function getProductById(id: string) {
     return NextResponse.json({ error: "Greška pri učitavanju proizvoda" }, { status: 500 });
   }
 }
-

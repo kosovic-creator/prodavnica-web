@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import { useCart } from "../../components/CartContext";
 import { PAGE_SIZE } from "@/lib/constants";
 import { useTranslation } from "react-i18next";
+import Link from "next/link";
 
 interface Product {
   id: string;
@@ -155,7 +156,11 @@ export default function ProductsPage() {
                   </div>
                 )}
                 <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    <Link href={`/products/${product.id}`} className="hover:underline">
+                      {product.name}
+                    </Link>
+                  </h3>
                   <p className="text-2xl font-bold text-green-600 mb-4">
                     {product.price.toFixed(2)} EUR
                   </p>
