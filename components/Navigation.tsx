@@ -96,7 +96,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
       {/* Search bar sa ikonicom */}
       {!!session && (
         <form onSubmit={handleSearch} className="flex justify-center w-full">
-          <div className="relative w-full min-w-[200px] sm:w-64 md:w-80 lg:w-96 mx-auto">
+          <div className="relative w-full min-w-[250px] sm:w-64 md:w-80 lg:w-96 mx-auto">
             <input
               type="text"
               value={query}
