@@ -56,5 +56,6 @@
   "user": "User",
   "total": "Total",
   "status": "Status",
-  "show": "Show"
+  "show": "Show",
+  "login": "Sign in"
 }

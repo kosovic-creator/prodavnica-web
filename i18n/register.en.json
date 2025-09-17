@@ -15,5 +15,6 @@
   "passwordPlaceholder": "Password (at least 6 characters)",
   "confirmPassword": "Confirm password",
   "confirmPasswordPlaceholder": "Confirm password",
-  "registering": "Registering..."
+  "registering": "Registering...",
+  "login": "Sign in"
 }

@@ -3,5 +3,6 @@
   "backToHome": "Back to home",
   "payment": "Payment",
   "amountToPay": "Amount to pay",
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "login": "Sign in"
 }

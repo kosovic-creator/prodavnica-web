@@ -33,6 +33,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
   const [results, setResults] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const { t, i18n } = useTranslation('home'); // koristi home namespace
+  const tNav = (key: string) => t(key, { ns: 'navigation' });
 
   const handleLogout = async () => {
     await signOut({ callbackUrl: "/" });
@@ -134,7 +135,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
                 className="flex items-center gap-2 text-red-700 px-3 py-2 rounded-md transition duration-200"
               >
                 <ArrowRightOnRectangleIcon className="h-5 w-5" />
-                  {t("logout")}
+                  {tNav("logout")}
                 </button>
               </>
             )
@@ -145,14 +146,14 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
                 className="flex items-center gap-2 text-green-700 hover:text-green-500 px-3 py-2 rounded-md transition duration-200"
               >
                 <ArrowLeftOnRectangleIcon className="h-5 w-5" />
-                {t("login")}
+                {tNav("login")}
               </Link>
               <Link
                 href="/register"
                 className="flex items-center gap-2 text-blue-950 px-3 py-2 rounded-md transition duration-200"
               >
                 <PlusCircleIcon className="h-5 w-5" />
-                {t("register")}
+                {tNav("register")}
               </Link>
             </div>
         )}

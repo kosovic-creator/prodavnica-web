@@ -2,5 +2,7 @@
   "shop": "Shop",
   "searchProducts": "Search products...",
   "admin": "Admin",
-  "searching": "Searching..."
+  "searching": "Searching...",
+  "login": "Sign in",
+  "logout": "Sign out"
 }

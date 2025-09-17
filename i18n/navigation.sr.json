@@ -2,5 +2,7 @@
   "shop": "Prodavnica",
   "searchProducts": "Pretraži proizvode...",
   "admin": "Administracija",
-  "searching": "Pretražujem..."
+  "searching": "Pretražujem...",
+  "login": "Prijavi se",
+  "logout": "Odjavi se"
 }
