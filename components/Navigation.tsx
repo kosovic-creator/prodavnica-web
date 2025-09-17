@@ -155,7 +155,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
             </>
         )}
       </div>
-      <div className="flex gap-1">
+      <div className="flex gap-1 sm:block pr-5">
         <button
           onClick={() => handleLanguageChange('en')}
           className="text-2xl mx-2 text-gray-700 hover:text-gray-900"
