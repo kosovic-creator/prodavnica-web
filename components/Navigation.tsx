@@ -106,7 +106,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
           <MagnifyingGlassIcon className="absolute right-3 top-2.5 h-5 w-5 text-gray-400 pointer-events-none" />
         </div>
       </form>
-      <div className="flex items-center gap-4 justify-end w-full">
+      <div className="flex items-center gap-4 justify-end w-full sm:w-auto">
         {session ? (
           <>
             {session.user.role === 'admin' && (
@@ -130,7 +130,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
             </Link>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 text-red-700 px-3 py-2 rounded-md transition duration-200"
+              className="sm:block pr-5 flex items-center gap-2 text-red-700 px-3 py-2 rounded-md transition duration-200"
             >
               <ArrowRightOnRectangleIcon className="h-5 w-5" />
               {t("logout")}
