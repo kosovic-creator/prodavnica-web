@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import '../i18n/i18n'; // Dodaj ovo na vrh fajla
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useCart } from "./CartContext";
-import { ShoppingCartIcon, Bars3Icon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { ShoppingCartIcon, Bars3Icon, MagnifyingGlassIcon, ArrowRightOnRectangleIcon, ArrowLeftOnRectangleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import { Session } from "next-auth";
 import { useTranslation } from "react-i18next";
 import { useRouter } from 'next/navigation';
+import '../i18n/i18n';
 
 
 interface NavigationProps {
@@ -89,13 +89,13 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
         >
           <Bars3Icon className="h-8 w-8" />
         </button>
-        <span className="text-gray-700 hidden sm:block">
+        <span className="text-gray-700 hidden sm:block pr-5">
           {session?.user?.name || session?.user?.email}
         </span>
       </div>
       {/* Search bar sa ikonicom */}
       <form onSubmit={handleSearch} className="flex-1 flex justify-center">
-        <div className="relative w-40 sm:w-40 md:w-80 lg:w-1/2">
+        <div className="relative w-80 sm:w-96 md:w-[300px] lg:w-[500px]">
           <input
             type="text"
             value={query}
@@ -106,7 +106,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
           <MagnifyingGlassIcon className="absolute right-3 top-2.5 h-5 w-5 text-gray-400 pointer-events-none" />
         </div>
       </form>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 justify-end w-full">
         {session ? (
           <>
             {session.user.role === 'admin' && (
@@ -128,9 +128,31 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
                 </span>
               )}
             </Link>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 text-red-700 px-3 py-2 rounded-md transition duration-200"
+            >
+              <ArrowRightOnRectangleIcon className="h-5 w-5" />
+              {t("logout")}
+            </button>
           </>
         ) : (
-            <></>
+            <>
+              <Link
+                href="/login"
+                className="flex items-center gap-2 text-green-700 hover:text-green-500 px-3 py-2 rounded-md transition duration-200"
+              >
+                <ArrowLeftOnRectangleIcon className="h-5 w-5" />
+                {t("login")}
+              </Link>
+              <Link
+                href="/register"
+                className="flex items-center gap-2 text-blue-950 px-3 py-2 rounded-md transition duration-200"
+              >
+                <PlusCircleIcon className="h-5 w-5" />
+                {t("register")}
+              </Link>
+            </>
         )}
       </div>
       <div className="flex gap-1">

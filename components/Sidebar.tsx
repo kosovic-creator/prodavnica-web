@@ -14,7 +14,6 @@ import {
 import { Session } from "next-auth";
 import NextAuth from "next-auth";
 import { useTranslation } from "react-i18next";
-import '../i18n/i18n';
 
 declare module "next-auth" {
   interface User {
