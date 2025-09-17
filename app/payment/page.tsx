@@ -10,6 +10,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import CheckoutForm from '@/components/CheckoutForm';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { useTranslation } from "react-i18next";
 
 const stripePromise = loadStripe('pk_test_51QzXjhGsYKIy68At6fXHC8XTKOsEwwPcC8M3bkQaaSFFmgSymnndIqk2ZJD8xEtNDWF2TdYPyfd6Ah7j0XYgKT1z005tFoGnFq'); // koristi svoj publishable key
 
@@ -19,6 +20,7 @@ function PlacanjePageContent() {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const searchParams = useSearchParams();
   const orderId = searchParams?.get('orderId');
+  const { t } = useTranslation('payment');
 
   useEffect(() => {
     async function fetchOrderAndCreateIntent() {
@@ -53,16 +55,16 @@ function PlacanjePageContent() {
         {paymentSuccess ? (
           <>
             <div className="text-green-600 text-lg font-semibold mb-4 text-center">
-              Plaćanje je uspješno! Potvrda je poslata na vaš email.
+              {t("paymentSuccess")}
             </div>
             <Link href="/" className="block text-center text-blue-600 hover:underline font-medium mt-4">
-              Povratak na početnu stranu
+              {t("backToHome")}
             </Link>
           </>
         ) : (
           <>
-              <h2 className="text-2xl font-bold text-center mb-6">Plaćanje</h2>
-              {orderAmount && <div className="text-lg text-center mb-4">Iznos za plaćanje: <span className="font-semibold">{orderAmount.toFixed(2)} EUR</span></div>}
+              <h2 className="text-2xl font-bold text-center mb-6">{t("payment")}</h2>
+              {orderAmount && <div className="text-lg text-center mb-4">{t("amountToPay")}: <span className="font-semibold">{orderAmount.toFixed(2)} EUR</span></div>}
               {clientSecret && (
                 <Elements stripe={stripePromise} options={options}>
                   <CheckoutForm clientSecret={clientSecret} onSuccess={() => setPaymentSuccess(true)} />
@@ -77,7 +79,7 @@ function PlacanjePageContent() {
 
 export default function PlacanjePage() {
   return (
-    <Suspense fallback={<div>Učitavanje...</div>}>
+    <Suspense fallback={<div>{t('loading')}</div>}>
       <PlacanjePageContent />
     </Suspense>
   );

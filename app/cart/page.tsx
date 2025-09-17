@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "../../components/CartContext";
+import { useTranslation } from "react-i18next";
 
 export default function CartPage() {
   const { data: session } = useSession();
@@ -14,7 +15,7 @@ export default function CartPage() {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
   const router = useRouter();
-
+  const { t } = useTranslation('cart');
 
   const handleCheckout = async () => {
     setIsCheckingOut(true);
@@ -60,16 +61,15 @@ export default function CartPage() {
   if (!session) {
     return (
       <div className="min-h-screen bg-gray-50">
-
         <div className="max-w-7xl mx-auto py-12 px-4">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Vaša korpa</h1>
-            <p className="text-gray-600 mb-4">Morate biti prijavljeni da vidite korpu.</p>
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">{t("yourCart")}</h1>
+            <p className="text-gray-600 mb-4">{t("mustBeLoggedIn")}</p>
             <Link
               href="/login"
               className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition duration-200"
             >
-              Prijavite se
+              {t("login")}
             </Link>
           </div>
         </div>
@@ -80,9 +80,8 @@ export default function CartPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-
         <div className="flex items-center justify-center py-12">
-          <div className="text-lg">Učitavam korpu...</div>
+          <div className="text-lg">{t("loadingCart")}</div>
         </div>
       </div>
     );
@@ -90,18 +89,16 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-
       <div className="max-w-7xl mx-auto py-12 px-4">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Vaša korpa</h1>
-
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">{t("yourCart")}</h1>
         {cart.items.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-600 text-lg mb-4">Vaša korpa je prazna.</p>
+            <p className="text-gray-600 text-lg mb-4">{t("cartEmpty")}</p>
             <Link
               href="/products"
               className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition duration-200"
             >
-              Idite na kupovinu
+              {t("goShopping")}
             </Link>
           </div>
         ) : (
@@ -109,7 +106,7 @@ export default function CartPage() {
             {/* Cart Items */}
             <div className="lg:col-span-2">
               <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-xl font-semibold mb-4">Stavke u korpi</h2>
+                  <h2 className="text-xl font-semibold mb-4">{t("cartItems")}</h2>
                 <div className="space-y-4">
                   {cart.items.map((item) => (
                     <div key={item.id} className="flex items-center space-x-4 border-b pb-4">
@@ -123,7 +120,7 @@ export default function CartPage() {
                         />
                       ) : (
                         <div className="w-20 h-20 bg-gray-200 rounded-md flex items-center justify-center">
-                          <span className="text-gray-500 text-sm">Nema slike</span>
+                            <span className="text-gray-500 text-sm">{t("noImage")}</span>
                         </div>
                       )}
                       <div className="flex-1">
@@ -156,7 +153,7 @@ export default function CartPage() {
                           onClick={() => handleRemoveItem(item.id)}
                           className="text-red-600 hover:text-red-800 text-sm mt-1"
                         >
-                          Ukloni
+                          {t("remove")}
                         </button>
                       </div>
                     </div>
@@ -168,23 +165,23 @@ export default function CartPage() {
             {/* Cart Summary */}
             <div className="lg:col-span-1">
               <div className="bg-white rounded-lg shadow p-6 sticky top-6">
-                <h2 className="text-xl font-semibold mb-4">Rezime narudžbe</h2>
+                  <h2 className="text-xl font-semibold mb-4">{t("orderSummary")}</h2>
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between">
-                    <span>Ukupno stavki:</span>
+                      <span>{t("totalItems")}:</span>
                     <span>{cart.itemCount}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Subtotal:</span>
+                      <span>{t("subtotal")}</span>
                       <span>{cart.total.toFixed(2)} EUR</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Dostava:</span>
+                      <span>{t("delivery")}</span>
                       <span>0.00 EUR</span>
                   </div>
                   <hr className="my-2" />
                   <div className="flex justify-between text-lg font-bold">
-                    <span>Ukupno:</span>
+                      <span>{t("total")}</span>
                       <span>{cart.total.toFixed(2)} EUR</span>
                   </div>
                 </div>
@@ -193,8 +190,7 @@ export default function CartPage() {
                   className="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 transition duration-200 font-semibold"
                   disabled={isCheckingOut}
                 >
-                  {isCheckingOut ? "Obrada..." : "Završi kupovinu"}
-
+                    {isCheckingOut ? t("processing") : t("checkout")}
                 </button>
                 {checkoutError && (
                   <div className="text-red-600 text-sm mt-2 text-center">
@@ -205,7 +201,7 @@ export default function CartPage() {
                   href="/products"
                   className="block w-full text-center bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition duration-200 mt-2"
                 >
-                  Nastavi kupovinu
+                    {t("continueShopping")}
                 </Link>
               </div>
             </div>

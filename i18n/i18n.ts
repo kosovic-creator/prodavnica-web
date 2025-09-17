@@ -10,6 +10,18 @@ import ordersSr from './orders.sr.json';
 import ordersEn from './orders.en.json';
 import profileSr from './profile.sr.json';
 import profileEn from './profile.en.json';
+import loginEn from './login.en.json';
+import loginSr from './login.sr.json';
+import adminEn from './admin.en.json';
+import adminSr from './admin.sr.json';
+import cardEn from './cart.en.json';
+import cardSr from './cart.sr.json';
+import paymentEn from './payment.en.json';
+import paymentSr from './payment.sr.json';
+import registerEn from './register.en.json';
+import registerSr from './register.sr.json';
+import NotFoundEn from './notFound.en.json';
+import NotFoundSr from './notFound.sr.json';
 
 i18n
   .use(initReactI18next)
@@ -20,14 +32,26 @@ i18n
         product: productEn,
         side: sideEn,
         orders: ordersEn,
-        profile: profileEn
+        profile: profileEn,
+        login: loginEn,
+        admin: adminEn,
+        cart: cardEn,
+        payment: paymentEn,
+        register: registerEn,
+        notFound: NotFoundEn
       },
       sr: {
         home: homeSr,
         product: productSr,
         side: sideSr,
         orders: ordersSr,
-        profile: profileSr
+        profile: profileSr,
+        login: loginSr,
+        admin: adminSr,
+        cart: cardSr,
+        payment: paymentSr,
+        register: registerSr,
+        notFound: NotFoundSr
       }
     },
     lng: 'sr', // postavi srpski kao default

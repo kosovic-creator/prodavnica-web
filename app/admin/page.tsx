@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { PAGE_SIZE } from "@/lib/constants";
+import { useTranslation } from "react-i18next";
 
 
 interface User {
@@ -49,6 +50,7 @@ interface Order {
 
 export default function AdminPage() {
   const { data: session, status } = useSession();
+  const { t } = useTranslation('admin');
   const [activeTab, setActiveTab] = useState<"users" | "products" | "orders">("users");
   const [users, setUsers] = useState<User[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
@@ -102,10 +104,10 @@ export default function AdminPage() {
         setUsers(data.items);
         setUserTotalPages(data.totalPages || 1);
       } else {
-        setError("Greška pri učitavanju korisnika");
+        setError(t("fetchUsersError"));
       }
     } catch {
-      setError("Greška pri učitavanju korisnika");
+      setError(t("fetchUsersError"));
     } finally {
       setLoadingUsers(false);
     }
@@ -120,10 +122,10 @@ export default function AdminPage() {
         setProducts(data.items);
         setProductTotalPages(data.totalPages || 1);
       } else {
-        setError("Greška pri učitavanju proizvoda");
+        setError(t("fetchProductsError"));
       }
     } catch {
-      setError("Greška pri učitavanju proizvoda");
+      setError(t("fetchProductsError"));
     } finally {
       setLoadingProducts(false);
     }
@@ -137,10 +139,10 @@ export default function AdminPage() {
         const data = await response.json();
         setOrders(data);
       } else {
-        setError("Greška pri učitavanju porudžbina");
+        setError(t("fetchOrdersError"));
       }
     } catch {
-      setError("Greška pri učitavanju porudžbina");
+      setError(t("fetchOrdersError"));
     } finally {
       setLoading(false);
     }
@@ -166,10 +168,10 @@ export default function AdminPage() {
         fetchUsers(userPage);
       } else {
         const data = await response.json();
-        setError(data.error || "Greška pri čuvanju korisnika");
+        setError(data.error || t("saveUserError"));
       }
     } catch {
-      setError("Greška pri čuvanju korisnika");
+      setError(t("saveUserError"));
     }
   };
 
@@ -212,40 +214,40 @@ export default function AdminPage() {
         fetchProducts(productPage);
       } else {
         const data = await response.json();
-        setError(data.error || "Greška pri čuvanju proizvoda");
+        setError(data.error || t("saveProductError"));
       }
     } catch {
-      setError("Greška pri čuvanju proizvoda");
+      setError(t("saveProductError"));
     }
   };
 
   const deleteUser = async (id: string) => {
-    if (!confirm("Da li ste sigurni da želite da obrišete ovog korisnika?")) return;
+    if (!confirm(t("confirmDeleteUser"))) return;
 
     try {
       const response = await fetch(`/api/users/${id}`, { method: "DELETE" });
       if (response.ok) {
         fetchUsers(userPage);
       } else {
-        setError("Greška pri brisanju korisnika");
+        setError(t("deleteUserError"));
       }
     } catch {
-      setError("Greška pri brisanju korisnika");
+      setError(t("deleteUserError"));
     }
   };
 
   const deleteProduct = async (id: string) => {
-    if (!confirm("Da li ste sigurni da želite da obrišete ovaj proizvod?")) return;
+    if (!confirm(t("confirmDeleteProduct"))) return;
 
     try {
       const response = await fetch(`/api/products/${id}`, { method: "DELETE" });
       if (response.ok) {
         fetchProducts(productPage);
       } else {
-        setError("Greška pri brisanju proizvoda");
+        setError(t("deleteProductError"));
       }
     } catch {
-      setError("Greška pri brisanju proizvoda");
+      setError(t("deleteProductError"));
     }
   };
 
@@ -293,11 +295,11 @@ export default function AdminPage() {
         return data.imageUrl;
       } else {
         const errorData = await response.json();
-        setError(`Greška pri uploadu slike: ${errorData.error}`);
+        setError(t("uploadImageError") + ': ' + errorData.error);
         return null;
       }
     } catch {
-      setError("Greška pri uploadu slike");
+      setError(t("uploadImageError"));
       return null;
     } finally {
       setUploadingImage(false);
@@ -314,9 +316,8 @@ export default function AdminPage() {
   if (status === "loading") {
     return (
       <div className="min-h-screen bg-gray-50">
-
         <div className="flex items-center justify-center py-12">
-          <div className="text-lg">Učitavam...</div>
+          <div className="text-lg">{t("loading")}</div>
         </div>
       </div>
     );
@@ -325,11 +326,10 @@ export default function AdminPage() {
   if (!session) {
     return (
       <div className="min-h-screen bg-gray-50">
-
         <div className="max-w-7xl mx-auto py-12 px-4">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-red-600">Neautorizovan pristup</h1>
-            <p className="mt-2">Morate biti prijavljeni da pristupite ovoj stranici.</p>
+            <h1 className="text-2xl font-bold text-red-600">{t("unauthorized")}</h1>
+            <p className="mt-2">{t("mustBeLoggedIn")}</p>
           </div>
         </div>
       </div>
@@ -338,16 +338,13 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-
       <div className="max-w-7xl mx-auto py-12 px-4">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Admin Panel</h1>
-
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">{t("adminPanel")}</h1>
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             {error}
           </div>
         )}
-
         {/* Tabs */}
         <div className="flex space-x-4 mb-8">
           <button
@@ -358,7 +355,7 @@ export default function AdminPage() {
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
           >
-            Korisnici
+            {t("usersTab")}
           </button>
           <button
             onClick={() => setActiveTab("products")}
@@ -368,7 +365,7 @@ export default function AdminPage() {
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
           >
-            Proizvodi
+            {t("productsTab")}
           </button>
           <button
             onClick={() => setActiveTab("orders")}
@@ -378,22 +375,21 @@ export default function AdminPage() {
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
           >
-            Porudžbine
+            {t("ordersTab")}
           </button>
         </div>
-
         {/* Users Tab */}
         {activeTab === "users" && (
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4">
-                {editingUser ? "Uredi korisnika" : "Dodaj novog korisnika"}
+                {editingUser ? t("editUser") : t("addUser")}
               </h2>
               <form onSubmit={handleUserSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <input
                     type="text"
-                    placeholder="Ime"
+                    placeholder={t("name")}
                     value={userForm.name}
                     onChange={(e) => setUserForm({ ...userForm, name: e.target.value })}
                     className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -401,7 +397,7 @@ export default function AdminPage() {
                   />
                   <input
                     type="email"
-                    placeholder="Email"
+                    placeholder={t("email")}
                     value={userForm.email}
                     onChange={(e) => setUserForm({ ...userForm, email: e.target.value })}
                     className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -409,7 +405,7 @@ export default function AdminPage() {
                   />
                   <input
                     type="password"
-                    placeholder={editingUser ? "Nova lozinka (ostaviti prazno ako se ne menja)" : "Lozinka"}
+                    placeholder={editingUser ? t("newPassword") : t("password")}
                     value={userForm.password}
                     onChange={(e) => setUserForm({ ...userForm, password: e.target.value })}
                     className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -420,8 +416,8 @@ export default function AdminPage() {
                     onChange={(e) => setUserForm({ ...userForm, role: e.target.value })}
                     className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   >
-                    <option value="user">Korisnik</option>
-                    <option value="admin">Admin</option>
+                    <option value="user">{t("userRole")}</option>
+                    <option value="admin">{t("adminRole")}</option>
                   </select>
                 </div>
                 <div className="flex space-x-2">
@@ -429,7 +425,7 @@ export default function AdminPage() {
                     type="submit"
                     className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
                   >
-                    {editingUser ? "Ažuriraj" : "Dodaj"}
+                    {editingUser ? t("update") : t("add")}
                   </button>
                   {editingUser && (
                     <button
@@ -437,39 +433,38 @@ export default function AdminPage() {
                       onClick={cancelEdit}
                       className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
                     >
-                      Otkaži
+                      {t("cancel")}
                     </button>
                   )}
                 </div>
               </form>
             </div>
-
             <div className="bg-white rounded-lg shadow overflow-hidden">
-              <h2 className="text-xl font-semibold p-6 border-b">Lista korisnika</h2>
+              <h2 className="text-xl font-semibold p-6 border-b">{t("userList")}</h2>
               {loadingUsers ? (
-                <div className="p-6">Učitavam korisnike...</div>
+                <div className="p-6">{t("loadingUsers")}</div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Slika
+                            {t("image")}
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Ime
+                            {t("name")}
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Email
+                            {t("email")}
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Uloga
+                            {t("role")}
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Kreiran
+                            {t("created")}
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Akcije
+                            {t("actions")}
                         </th>
                       </tr>
                     </thead>
@@ -516,13 +511,13 @@ export default function AdminPage() {
                               onClick={() => editUser(user)}
                               className="text-indigo-600 hover:text-indigo-900"
                             >
-                              Uredi
+                              {t("edit")}
                             </button>
                             <button
                               onClick={() => deleteUser(user.id)}
                               className="text-red-600 hover:text-red-900"
                             >
-                              Obriši
+                              {t("delete")}
                             </button>
                           </td>
                         </tr>
@@ -537,15 +532,15 @@ export default function AdminPage() {
                           disabled={userPage === 1}
                           className="px-3 py-1 rounded bg-gray-200 text-gray-700 disabled:opacity-50"
                         >
-                          Prethodna
+                          {t("previous")}
                         </button>
-                        <span className="px-3 py-1">Strana {userPage} / {userTotalPages}</span>
+                        <span className="px-3 py-1">{t("page")} {userPage} / {userTotalPages}</span>
                         <button
                           onClick={() => setUserPage((p) => Math.min(userTotalPages, p + 1))}
                           disabled={userPage === userTotalPages}
                           className="px-3 py-1 rounded bg-gray-200 text-gray-700 disabled:opacity-50"
                         >
-                          Sledeća
+                          {t("next")}
                         </button>
                       </div>
                     )}
@@ -554,19 +549,18 @@ export default function AdminPage() {
             </div>
           </div>
         )}
-
         {/* Products Tab */}
         {activeTab === "products" && (
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4">
-                {editingProduct ? "Uredi proizvod" : "Dodaj novi proizvod"}
+                {editingProduct ? t("editProduct") : t("addProduct")}
               </h2>
               <form onSubmit={handleProductSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <input
                     type="text"
-                    placeholder="Naziv proizvoda"
+                    placeholder={t("productName")}
                     value={productForm.name}
                     onChange={(e) => setProductForm({ ...productForm, name: e.target.value })}
                     className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -575,18 +569,17 @@ export default function AdminPage() {
                   <input
                     type="number"
                     step="0.01"
-                    placeholder="Cena"
+                    placeholder={t("price")}
                     value={productForm.price}
                     onChange={(e) => setProductForm({ ...productForm, price: e.target.value })}
                     className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     required
                   />
                 </div>
-
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Slika proizvoda
+                      {t("productImage")}
                     </label>
                     <div className="space-y-2">
                       <input
@@ -597,33 +590,30 @@ export default function AdminPage() {
                       />
                       {selectedFile && (
                         <p className="text-sm text-gray-600">
-                          Izabran fajl: {selectedFile.name}
+                          {t("selectedFile")}: {selectedFile.name}
                         </p>
                       )}
                       {uploadingImage && (
                         <p className="text-sm text-blue-600">
-                          Upload u toku...
+                          {t("uploading")}
                         </p>
                       )}
                     </div>
                   </div>
-
-                  <div className="text-center text-gray-500">ili</div>
-
+                  <div className="text-center text-gray-500">{t("or")}</div>
                   <input
                     type="url"
-                    placeholder="URL slike (alternativno)"
+                    placeholder={t("imageUrlAlt")}
                     value={productForm.image}
                     onChange={(e) => setProductForm({ ...productForm, image: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
-
                   {productForm.image && (
                     <div className="mt-2">
-                      <p className="text-sm text-gray-600 mb-2">Pregled slike:</p>
+                      <p className="text-sm text-gray-600 mb-2">{t("imagePreview")}</p>
                       <Image
                         src={productForm.image}
-                        alt="Preview"
+                        alt={t("preview")}
                         width={200}
                         height={150}
                         className="object-cover rounded-md border"
@@ -642,10 +632,10 @@ export default function AdminPage() {
                     }`}
                   >
                     {uploadingImage
-                      ? "Upload u toku..."
+                      ? t("uploading")
                       : editingProduct
-                        ? "Ažuriraj"
-                        : "Dodaj"
+                        ? t("update")
+                        : t("add")
                     }
                   </button>
                   {editingProduct && (
@@ -659,36 +649,35 @@ export default function AdminPage() {
                           : "bg-gray-500 hover:bg-gray-600"
                       }`}
                     >
-                      Otkaži
+                      {t("cancel")}
                     </button>
                   )}
                 </div>
               </form>
             </div>
-
             <div className="bg-white rounded-lg shadow overflow-hidden">
-              <h2 className="text-xl font-semibold p-6 border-b">Lista proizvoda</h2>
+              <h2 className="text-xl font-semibold p-6 border-b">{t("productList")}</h2>
               {loadingProducts ? (
-                <div className="p-6">Učitavam proizvode...</div>
+                <div className="p-6">{t("loadingProducts")}</div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Slika
+                            {t("image")}
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Naziv
+                            {t("productName")}
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Cena
+                            {t("price")}
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Kreiran
+                            {t("created")}
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Akcije
+                            {t("actions")}
                         </th>
                       </tr>
                     </thead>
@@ -726,13 +715,13 @@ export default function AdminPage() {
                               onClick={() => editProduct(product)}
                               className="text-indigo-600 hover:text-indigo-900"
                             >
-                              Uredi
+                              {t("edit")}
                             </button>
                             <button
                               onClick={() => deleteProduct(product.id)}
                               className="text-red-600 hover:text-red-900"
                             >
-                              Obriši
+                              {t("delete")}
                             </button>
                           </td>
                         </tr>
@@ -747,31 +736,30 @@ export default function AdminPage() {
                           disabled={productPage === 1}
                           className="px-3 py-1 rounded bg-gray-200 text-gray-700 disabled:opacity-50"
                         >
-                          Prethodna
+                          {t("previous")}
                         </button>
-                        <span className="px-3 py-1">Strana {productPage} / {productTotalPages}</span>
+                        <span className="px-3 py-1">{t("page")} {productPage} / {productTotalPages}</span>
                         <button
                           onClick={() => setProductPage((p) => Math.min(productTotalPages, p + 1))}
                           disabled={productPage === productTotalPages}
                           className="px-3 py-1 rounded bg-gray-200 text-gray-700 disabled:opacity-50"
                         >
-                          Sledeća
-                      </button>
-                    </div>
+                          {t("next")}
+                        </button>
+                      </div>
                     )}
                   </div>
               )}
             </div>
           </div>
         )}
-
         {/* Orders Tab */}
         {activeTab === "orders" && (
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-semibold mb-4">Lista porudžbina</h2>
+              <h2 className="text-xl font-semibold mb-4">{t("orderList")}</h2>
               {loading ? (
-                <div className="p-6">Učitavam porudžbine...</div>
+                <div className="p-6">{t("loadingOrders")}</div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200">
@@ -781,19 +769,19 @@ export default function AdminPage() {
                           ID
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Korisnik
+                            {t("user")}
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Ukupno
+                            {t("total")}
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Status
+                            {t("status")}
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Kreirano
+                            {t("created")}
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Akcije
+                            {t("actions")}
                         </th>
                       </tr>
                     </thead>
@@ -828,13 +816,13 @@ export default function AdminPage() {
                               onClick={() => {}}
                               className="text-indigo-600 hover:text-indigo-900"
                             >
-                              Prikaži
+                              {t("show")}
                             </button>
                             <button
                               onClick={() => {}}
                               className="text-red-600 hover:text-red-900"
                             >
-                              Obriši
+                              {t("delete")}
                             </button>
                           </td>
                         </tr>

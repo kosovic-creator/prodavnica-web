@@ -1,0 +1,19 @@
+{
+  "yourCart": "Vaša korpa",
+  "mustBeLoggedIn": "Morate biti prijavljeni da vidite korpu.",
+  "login": "Prijavite se",
+  "loadingCart": "Učitavam korpu...",
+  "cartEmpty": "Vaša korpa je prazna.",
+  "goShopping": "Idite na kupovinu",
+  "cartItems": "Stavke u korpi",
+  "noImage": "Nema slike",
+  "remove": "Ukloni",
+  "orderSummary": "Rezime narudžbe",
+  "totalItems": "Ukupno stavki",
+  "subtotal": "Subtotal",
+  "delivery": "Dostava",
+  "total": "Ukupno",
+  "processing": "Obrada...",
+  "checkout": "Završi kupovinu",
+  "continueShopping": "Nastavi kupovinu"
+}

@@ -1,0 +1,18 @@
+{
+  "emailVerified": "Email je uspešno verifikovan! Sada se možete prijaviti.",
+  "loginError": "Došlo je do greške prilikom prijave",
+  "backToHome": "Nazad na početnu",
+  "loginToAccount": "Prijavite se na vaš račun",
+  "or": "Ili",
+  "registerNewAccount": "registrujte se za novi račun",
+  "loading": "Učitavam...",
+  "email": "Email adresa",
+  "emailPlaceholder": "Email adresa",
+  "password": "Lozinka",
+  "passwordPlaceholder": "Lozinka",
+  "loggingIn": "Prijavljivam...",
+  "login": "Prijavite se",
+  "notReceivedVerification": "Niste dobili verifikacijski email?",
+  "resendVerification": "Pošaljite ponovo",
+  "register": "Registracija"
+}

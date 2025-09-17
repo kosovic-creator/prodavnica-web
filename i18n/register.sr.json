@@ -1,0 +1,19 @@
+{
+  "passwordsDontMatch": "Lozinke se ne poklapaju",
+  "passwordTooShort": "Lozinka mora imati najmanje 6 karaktera",
+  "registrationSuccess": "Registracija je uspešna! Proverite vaš email za link za potvrdu.",
+  "registrationError": "Došlo je do greške prilikom registracije",
+  "backToHome": "Nazad na početnu",
+  "register": "Registrujte se",
+  "or": "Ili",
+  "loginToExisting": "prijavite se na postojeći račun",
+  "name": "Ime",
+  "namePlaceholder": "Vaše ime",
+  "email": "Email adresa",
+  "emailPlaceholder": "Email adresa",
+  "password": "Lozinka",
+  "passwordPlaceholder": "Lozinka (najmanje 6 karaktera)",
+  "confirmPassword": "Potvrdite lozinku",
+  "confirmPasswordPlaceholder": "Potvrdite lozinku",
+  "registering": "Registrujem..."
+}

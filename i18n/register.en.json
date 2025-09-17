@@ -1,0 +1,19 @@
+{
+  "passwordsDontMatch": "Passwords do not match",
+  "passwordTooShort": "Password must be at least 6 characters",
+  "registrationSuccess": "Registration successful! Check your email for the confirmation link.",
+  "registrationError": "An error occurred during registration",
+  "backToHome": "Back to home",
+  "register": "Register",
+  "or": "Or",
+  "loginToExisting": "log in to an existing account",
+  "name": "Name",
+  "namePlaceholder": "Your name",
+  "email": "Email address",
+  "emailPlaceholder": "Email address",
+  "password": "Password",
+  "passwordPlaceholder": "Password (at least 6 characters)",
+  "confirmPassword": "Confirm password",
+  "confirmPasswordPlaceholder": "Confirm password",
+  "registering": "Registering..."
+}

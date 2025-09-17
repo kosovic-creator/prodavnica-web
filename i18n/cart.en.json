@@ -1,0 +1,19 @@
+{
+  "yourCart": "Your cart",
+  "mustBeLoggedIn": "You must be logged in to view your cart.",
+  "login": "Log in",
+  "loadingCart": "Loading cart...",
+  "cartEmpty": "Your cart is empty.",
+  "goShopping": "Go shopping",
+  "cartItems": "Cart items",
+  "noImage": "No image",
+  "remove": "Remove",
+  "orderSummary": "Order summary",
+  "totalItems": "Total items",
+  "subtotal": "Subtotal",
+  "delivery": "Delivery",
+  "total": "Total",
+  "processing": "Processing...",
+  "checkout": "Checkout",
+  "continueShopping": "Continue shopping"
+}
