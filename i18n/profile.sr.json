@@ -1,0 +1,20 @@
+{
+  "fetchError": "Greška pri učitavanju profila",
+  "uploadError": "Greška pri uploadu slike",
+  "updateSuccess": "Profil je uspešno ažuriran!",
+  "updateError": "Greška pri ažuriranju profila",
+  "loading": "Učitavam...",
+  "myProfile": "Moj Profil",
+  "profileImageAlt": "Slika profila",
+  "profileImageLabel": "Slika profila",
+  "selectedFile": "Izabran fajl",
+  "uploading": "Upload u toku...",
+  "name": "Ime",
+  "email": "Email",
+  "emailCannotChange": "Email adresa se ne može menjati",
+  "role": "Uloga",
+  "memberSince": "Član od",
+  "updating": "Ažuriranje...",
+  "updateProfile": "Ažuriraj Profil",
+  "back": "Nazad"
+}

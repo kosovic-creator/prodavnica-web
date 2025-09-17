@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useTranslation } from "react-i18next";
 
 
 interface UserProfile {
@@ -18,6 +19,7 @@ interface UserProfile {
 export default function ProfilePage() {
   const { data: session, status, update } = useSession();
   const router = useRouter();
+  const { t } = useTranslation('profile');
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -54,10 +56,10 @@ export default function ProfilePage() {
           image: data.image || "",
         });
       } else {
-        setError("Greška pri učitavanju profila");
+        setError(t("fetchError"));
       }
     } catch {
-      setError("Greška pri učitavanju profila");
+      setError(t("fetchError"));
     } finally {
       setLoading(false);
     }
@@ -68,22 +70,20 @@ export default function ProfilePage() {
     try {
       const formData = new FormData();
       formData.append('file', file);
-
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       });
-
       if (response.ok) {
         const data = await response.json();
         return data.imageUrl;
       } else {
         const errorData = await response.json();
-        setError(`Greška pri uploadu slike: ${errorData.error}`);
+        setError(t("uploadError") + ': ' + errorData.error);
         return null;
       }
     } catch {
-      setError("Greška pri uploadu slike");
+      setError(t("uploadError"));
       return null;
     } finally {
       setUploadingImage(false);
@@ -112,7 +112,6 @@ export default function ProfilePage() {
 
     try {
       let imageUrl = profileForm.image;
-
       // Upload image if a file is selected
       if (selectedFile) {
         const uploadedImageUrl = await uploadImage(selectedFile);
@@ -142,7 +141,7 @@ export default function ProfilePage() {
           image: updatedProfile.image || "",
         });
         setSelectedFile(null);
-        setSuccess("Profil je uspešno ažuriran!");
+        setSuccess(t("updateSuccess"));
 
         // Update session to reflect changes
         await update({
@@ -155,19 +154,18 @@ export default function ProfilePage() {
         });
       } else {
         const data = await response.json();
-        setError(data.error || "Greška pri ažuriranju profila");
+        setError(data.error || t("updateError"));
       }
     } catch {
-      setError("Greška pri ažuriranju profila");
+      setError(t("updateError"));
     }
   };
 
   if (status === "loading" || loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-
         <div className="flex items-center justify-center py-12">
-          <div className="text-lg">Učitavam...</div>
+          <div className="text-lg">{t("loading")}</div>
         </div>
       </div>
     );
@@ -179,23 +177,19 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-     
       <div className="max-w-2xl mx-auto py-12 px-4">
         <div className="bg-white rounded-lg shadow-md p-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">Moj Profil</h1>
-
+          <h1 className="text-3xl font-bold text-gray-900 mb-8">{t("myProfile")}</h1>
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
               {error}
             </div>
           )}
-
           {success && (
             <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
               {success}
             </div>
           )}
-
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Profile Image Section */}
             <div className="text-center">
@@ -203,7 +197,7 @@ export default function ProfilePage() {
                 {profileForm.image ? (
                   <Image
                     src={profileForm.image}
-                    alt="Profile"
+                    alt={t("profileImageAlt")}
                     width={150}
                     height={150}
                     className="mx-auto rounded-full object-cover border-4 border-gray-200"
@@ -224,10 +218,9 @@ export default function ProfilePage() {
                   </div>
                 )}
               </div>
-
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-gray-700">
-                  Slika profila
+                  {t("profileImageLabel")}
                 </label>
                 <input
                   type="file"
@@ -237,22 +230,21 @@ export default function ProfilePage() {
                 />
                 {selectedFile && (
                   <p className="text-sm text-gray-600">
-                    Izabran fajl: {selectedFile.name}
+                    {t("selectedFile")}: {selectedFile.name}
                   </p>
                 )}
                 {uploadingImage && (
                   <p className="text-sm text-blue-600">
-                    Upload u toku...
+                    {t("uploading")}
                   </p>
                 )}
               </div>
             </div>
-
             {/* Profile Information */}
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Ime
+                  {t("name")}
                 </label>
                 <input
                   type="text"
@@ -262,10 +254,9 @@ export default function ProfilePage() {
                   required
                 />
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email
+                  {t("email")}
                 </label>
                 <input
                   type="email"
@@ -274,15 +265,14 @@ export default function ProfilePage() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500 cursor-not-allowed"
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  Email adresa se ne može menjati
+                  {t("emailCannotChange")}
                 </p>
               </div>
-
               {profile && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Uloga
+                      {t("role")}
                     </label>
                     <span className={`inline-flex px-2 py-1 rounded-full text-xs font-semibold ${
                       profile.role === 'admin'
@@ -294,7 +284,7 @@ export default function ProfilePage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Član od
+                      {t("memberSince")}
                     </label>
                     <p className="text-sm text-gray-600">
                       {new Date(profile.createdAt).toLocaleDateString('sr-RS')}
@@ -303,7 +293,6 @@ export default function ProfilePage() {
                 </div>
               )}
             </div>
-
             <div className="flex space-x-4">
               <button
                 type="submit"
@@ -314,14 +303,14 @@ export default function ProfilePage() {
                     : "bg-indigo-600 hover:bg-indigo-700"
                 }`}
               >
-                {uploadingImage ? "Ažuriranje..." : "Ažuriraj Profil"}
+                {uploadingImage ? t("updating") : t("updateProfile")}
               </button>
               <button
                 type="button"
                 onClick={() => router.back()}
                 className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
               >
-                Nazad
+                {t("back")}
               </button>
             </div>
           </form>

@@ -1,0 +1,20 @@
+{
+  "fetchError": "Error loading profile",
+  "uploadError": "Error uploading image",
+  "updateSuccess": "Profile updated successfully!",
+  "updateError": "Error updating profile",
+  "loading": "Loading...",
+  "myProfile": "My Profile",
+  "profileImageAlt": "Profile image",
+  "profileImageLabel": "Profile image",
+  "selectedFile": "Selected file",
+  "uploading": "Uploading...",
+  "name": "Name",
+  "email": "Email",
+  "emailCannotChange": "Email address cannot be changed",
+  "role": "Role",
+  "memberSince": "Member since",
+  "updating": "Updating...",
+  "updateProfile": "Update Profile",
+  "back": "Back"
+}
