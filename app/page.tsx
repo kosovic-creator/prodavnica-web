@@ -4,6 +4,7 @@
 
 import { useSession } from "next-auth/react";
 import { useTranslation } from "react-i18next";
+import AdminPage from "./admin/page";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -11,7 +12,11 @@ export default function Home() {
  console.log('to je :', process.env.EMAIL_PASS);
   return (
     <div className="min-h-screen bg-gray-50">
-      <main className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+      {session?.user?.role === 'admin' ? (
+        <div >
+         <AdminPage />
+        </div>
+      ) : <main className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900 mb-8">
             {t("welcome")}
@@ -33,7 +38,8 @@ export default function Home() {
             </div>
           )}
         </div>
-      </main>
+      </main>}
+
     </div>
   );
 }
