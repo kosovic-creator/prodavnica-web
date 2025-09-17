@@ -10,6 +10,7 @@
   "order": "Porudžbina",
   "completed": "Završeno",
   "viewProducts": "Pogledajte proizvode",
+  "noOrders": "Nemate porudžbina.",
   "pay": "Plati",
   "noImage": "Nema dostupne slike",
   "quantity": "Količina",

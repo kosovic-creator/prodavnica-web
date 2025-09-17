@@ -1,6 +1,7 @@
 // filepath: /frontend/components/CheckoutForm.tsx
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import React, { FormEvent, useState } from 'react';
+import { useSession } from "next-auth/react";
 
 interface CheckoutFormProps {
   clientSecret: string;
@@ -10,6 +11,7 @@ interface CheckoutFormProps {
 function CheckoutForm({ clientSecret, onSuccess }: CheckoutFormProps) {
   const stripe = useStripe();
   const elements = useElements();
+  const { data: session } = useSession();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -28,9 +30,24 @@ function CheckoutForm({ clientSecret, onSuccess }: CheckoutFormProps) {
     setLoading(false);
     if (result.error) {
       setErrorMsg(result.error.message || 'Došlo je do greške pri plaćanju.');
+      console.error(result.error.message);
     } else {
       if (result.paymentIntent.status === 'succeeded') {
         setErrorMsg(null);
+        console.log('Payment succeeded!');
+        // Pozovi API za slanje email-a
+        try {
+          await fetch('/api/payment/send-confirmation-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              to: session?.user?.email,
+              amount: result.paymentIntent.amount,
+            }),
+          });
+        } catch (err) {
+          console.error('Greška pri slanju email-a:', err);
+        }
         if (onSuccess) onSuccess();
       }
     }
