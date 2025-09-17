@@ -1,0 +1,23 @@
+{
+  "orderSuccess": "Porudžbina uspešno postavljena",
+  "fetchError": "Greška prilikom preuzimanja podataka",
+   "login": "Prijava",
+  "mustBeLoggedIn": "Morate biti prijavljeni da biste videli ovu stranicu.",
+  "loadingOrders": "Učitavanje porudžbina...",
+  "yourOrders": "Vaše porudžbine",
+  "ordersOverview": "Pregled porudžbina",
+  "startShopping": "Započnite kupovinu",
+  "order": "Porudžbina",
+  "completed": "Završeno",
+  "viewProducts": "Pogledajte proizvode",
+  "pay": "Plati",
+  "noImage": "Nema dostupne slike",
+  "quantity": "Količina",
+  "previous": "Prethodna",
+  "next": "Sledeća",
+  "page": "Strana",
+  "of": "od",
+  "items": "stavki",
+  "total": "Ukupno",
+  "status": "Status"
+}

@@ -6,6 +6,8 @@ import productEn from './product.en.json';
 import productSr from './product.sr.json';
 import sideEn from './side.en.json';
 import sideSr from './side.sr.json';
+import ordersSr from './orders.sr.json';
+import ordersEn from './orders.en.json';
 
 i18n
   .use(initReactI18next)
@@ -14,12 +16,14 @@ i18n
       en: {
         home: homeEn,
         product: productEn,
-        side: sideEn
+        side: sideEn,
+        orders: ordersEn
       },
       sr: {
         home: homeSr,
         product: productSr,
-        side: sideSr
+        side: sideSr,
+        orders: ordersSr
       }
     },
     lng: 'sr', // postavi srpski kao default

@@ -1,0 +1,24 @@
+{
+
+  "orderSuccess": "Order placed successfully",
+  "fetchError": "Error fetching data",
+   "login": "Login",
+   "mustBeLoggedIn": "You must be logged in to view this page.",
+  "loadingOrders": "Loading Orders...",
+  "yourOrders": "Your Orders",
+  "ordersOverview": "Orders Overview",
+  "startShopping": "Start Shopping",
+  "order": "Order",
+  "completed": "Completed",
+  "viewProducts": "View Products",
+  "pay": "Pay",
+  "noImage": "No Image Available",
+  "quantity": "Quantity",
+  "previous": "Previous",
+  "next": "Next",
+  "page": "Page",
+  "of": "of",
+  "items": "items",
+  "total": "Total",
+  "status": "Status"
+}
