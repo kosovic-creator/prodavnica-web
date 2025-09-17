@@ -83,12 +83,14 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
     <nav className="flex items-center justify-between p-4 bg-gray-100">
       {/* Hamburger na lijevoj strani */}
       <div className="flex items-center gap-4">
-        <button
-          onClick={() => setSidebarOpen(true)}
-          className="text-gray-700 hover:text-gray-900"
-        >
-          <Bars3Icon className="h-8 w-8" />
-        </button>
+        {!!session && (
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="text-gray-700 hover:text-gray-900"
+          >
+            <Bars3Icon className="h-8 w-8" />
+          </button>
+        )}
         <span className="text-gray-700 hidden sm:block pr-5">
           {session?.user?.name || session?.user?.email}
         </span>
@@ -130,10 +132,10 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
             </Link>
             <button
               onClick={handleLogout}
-              className="sm:block pr-5 flex items-center gap-2 text-red-700 px-3 py-2 rounded-md transition duration-200"
+              className="flex items-center gap-2 text-red-700 px-3 py-2 rounded-md transition duration-200"
             >
               <ArrowRightOnRectangleIcon className="h-5 w-5" />
-              {t("logout")}
+              {/* {t("logout")} */}
             </button>
           </>
         ) : (
@@ -155,7 +157,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
             </>
         )}
       </div>
-      <div className="flex gap-1 sm:block pr-5">
+      <div className="flex gap-1">
         <button
           onClick={() => handleLanguageChange('en')}
           className="text-2xl mx-2 text-gray-700 hover:text-gray-900"
