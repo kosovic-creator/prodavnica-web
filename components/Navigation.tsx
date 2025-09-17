@@ -91,55 +91,55 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
             <Bars3Icon className="h-8 w-8" />
           </button>
         )}
-        <span className="text-gray-700 hidden sm:block pr-5">
-          {session?.user?.name || session?.user?.email}
-        </span>
       </div>
       {/* Search bar sa ikonicom */}
-      <form onSubmit={handleSearch} className="flex-1 flex justify-center">
-        <div className="relative w-80 sm:w-96 md:w-[300px] lg:w-[500px]">
-          <input
-            type="text"
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            placeholder={t("searchProducts")}
-            className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 pr-10"
-          />
-          <MagnifyingGlassIcon className="absolute right-3 top-2.5 h-5 w-5 text-gray-400 pointer-events-none" />
-        </div>
-      </form>
-      <div className="flex items-center gap-4 justify-end w-full sm:w-auto">
+      {!!session && (
+        <form onSubmit={handleSearch} className="flex-1 flex justify-center">
+          <div className="relative w-80 sm:w-96 md:w-[300px] lg:w-[300px]">
+            <input
+              type="text"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder={t("searchProducts")}
+              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 pr-10"
+            />
+            <MagnifyingGlassIcon className="absolute right-3 top-2.5 h-5 w-5 text-gray-400 pointer-events-none" />
+          </div>
+        </form>
+      )}
+      <div className="flex items-center gap-4 justify-end w-full">
         {session ? (
-          <>
-            {session.user.role === 'admin' && (
-              <Link
-                href="/admin"
-                className="hidden sm:block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
-              >
-                {t("admin")}
-              </Link>
-            )}
-            <Link
-              href="/cart"
-              className="relative text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
-            >
-              <ShoppingCartIcon className="h-6 w-6" />
-              {cart.itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {cart.itemCount}
-                </span>
-              )}
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 text-red-700 px-3 py-2 rounded-md transition duration-200"
-            >
-              <ArrowRightOnRectangleIcon className="h-5 w-5" />
-              {/* {t("logout")} */}
-            </button>
-          </>
-        ) : (
+          session.user.role === 'admin' ? (
             <>
+              <span className="text-gray-700 hidden sm:block pr-5">
+                {session.user.name || session.user.email}
+              </span>
+            </>
+          ) : (
+            <>
+              {session.user.role === 'admin' && null}
+              <Link
+                href="/cart"
+                className="relative text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
+              >
+                <ShoppingCartIcon className="h-6 w-6" />
+                {cart.itemCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {cart.itemCount}
+                  </span>
+                )}
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 text-red-700 px-3 py-2 rounded-md transition duration-200"
+              >
+                <ArrowRightOnRectangleIcon className="h-5 w-5" />
+                  {t("logout")}
+                </button>
+              </>
+            )
+        ) : (
+            <div className="flex items-center gap-2 ml-auto">
               <Link
                 href="/login"
                 className="flex items-center gap-2 text-green-700 hover:text-green-500 px-3 py-2 rounded-md transition duration-200"
@@ -154,7 +154,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
                 <PlusCircleIcon className="h-5 w-5" />
                 {t("register")}
               </Link>
-            </>
+            </div>
         )}
       </div>
       <div className="flex gap-1">
