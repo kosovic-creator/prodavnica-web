@@ -11,6 +11,7 @@ import CheckoutForm from '@/components/CheckoutForm';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useTranslation } from "react-i18next";
+import { t } from 'i18next';
 
 const stripePromise = loadStripe('pk_test_51QzXjhGsYKIy68At6fXHC8XTKOsEwwPcC8M3bkQaaSFFmgSymnndIqk2ZJD8xEtNDWF2TdYPyfd6Ah7j0XYgKT1z005tFoGnFq'); // koristi svoj publishable key
 

@@ -7,6 +7,9 @@
     "success": "You have successfully logged in."
   },
   "greeting": "Welcome, {{name}}",
-  "success": "You have successfully logged in."
-
+  "success": "You have successfully logged in.",
+  "shop": "Shop",
+  "searchProducts": "Search products...",
+  "admin": "Admin",
+  "searching": "Searching..."
 }

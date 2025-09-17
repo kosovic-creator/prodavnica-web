@@ -67,7 +67,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Link href="/" className="text-xl font-bold text-gray-800">
-                Prodavnica
+                {t("shop")}
               </Link>
             </div>
             <div className="flex items-center space-x-4">
@@ -100,7 +100,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
             type="text"
             value={query}
             onChange={e => setQuery(e.target.value)}
-            placeholder="Pretraži proizvode..."
+            placeholder={t("searchProducts")}
             className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 pr-10"
           />
           <MagnifyingGlassIcon className="absolute right-3 top-2.5 h-5 w-5 text-gray-400 pointer-events-none" />
@@ -114,7 +114,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
                 href="/admin"
                 className="hidden sm:block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md transition duration-200"
               >
-                Admin
+                {t("admin")}
               </Link>
             )}
             <Link
@@ -128,13 +128,9 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
                 </span>
               )}
             </Link>
-
           </>
         ) : (
-          <>
-
-
-          </>
+            <></>
         )}
       </div>
       <div className="flex gap-1">
@@ -161,7 +157,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
           session={session}
         />
       )}
-      {loading && <div>Pretražujem...</div>}
+      {loading && <div>{t("searching")}</div>}
       {results.length > 0 && (
         <ul className="bg-white border rounded w-full max-w-md mt-2">
           {results.map(product => (

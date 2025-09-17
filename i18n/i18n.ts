@@ -22,6 +22,8 @@ import registerEn from './register.en.json';
 import registerSr from './register.sr.json';
 import NotFoundEn from './notFound.en.json';
 import NotFoundSr from './notFound.sr.json';
+import navigatinEn from './navigation.en.json';
+import navigationSr from './navigation.sr.json';
 
 i18n
   .use(initReactI18next)
@@ -38,7 +40,8 @@ i18n
         cart: cardEn,
         payment: paymentEn,
         register: registerEn,
-        notFound: NotFoundEn
+        notFound: NotFoundEn,
+        navigation: navigatinEn
       },
       sr: {
         home: homeSr,
@@ -51,7 +54,8 @@ i18n
         cart: cardSr,
         payment: paymentSr,
         register: registerSr,
-        notFound: NotFoundSr
+        notFound: NotFoundSr,
+        navigation: navigationSr
       }
     },
     lng: 'sr', // postavi srpski kao default

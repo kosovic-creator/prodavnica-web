@@ -3,5 +3,9 @@
   "hello": "Zdravo",
   "description": "Ovdje možete pronaći najbolje proizvode.",
   "greeting": "Dobrodošli, {{name}}!",
-  "success": "Uspješno ste se prijavili."
+  "success": "Uspješno ste se prijavili.",
+  "shop": "Prodavnica",
+  "searchProducts": "Pretraži proizvode...",
+  "admin": "Admin",
+  "searching": "Pretražujem..."
 }
