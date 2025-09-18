@@ -16,6 +16,7 @@ interface Product {
   image?: string;
   createdAt: string;
   updatedAt: string;
+  quantity: number;
 }
 
 export default function ProductsPage() {
@@ -41,7 +42,8 @@ export default function ProductsPage() {
       const response = await fetch(`/api/products?page=${pageNum}&pageSize=${PAGE_SIZE}`);
       if (response.ok) {
         const data = await response.json();
-        setProducts(data.items);
+        // Filtriraj proizvode sa quantity > 0
+        setProducts(data.items.filter((p: Product) => p.quantity > 0));
         setTotalPages(data.totalPages || 1);
       } else {
         setError("Greška pri učitavanju proizvoda");

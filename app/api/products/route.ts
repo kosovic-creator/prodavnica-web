@@ -74,3 +74,40 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Greška pri kreiranju proizvoda" }, { status: 500 });
   }
 }
+
+// PATCH - Update product quantity or delete if quantity is 0
+export async function PATCH(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ error: "Neautorizovan pristup" }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const { productId, quantity } = body;
+    console.log("PATCH productId:", productId, "quantity:", quantity);
+    if (typeof productId !== "string" || typeof quantity !== "number") {
+      return NextResponse.json({ error: "Neispravni podaci" }, { status: 400 });
+    }
+
+    const product = await prisma.product.findUnique({ where: { id: productId } });
+    if (!product) {
+      return NextResponse.json({ error: "Proizvod ne postoji" }, { status: 404 });
+    }
+
+    if (quantity === 0) {
+      await prisma.product.delete({ where: { id: productId } });
+      console.log("Proizvod obrisan jer je količina 0");
+      return NextResponse.json({ message: "Proizvod obrisan jer je količina 0" });
+    } else {
+      const updated = await prisma.product.update({
+        where: { id: productId },
+        data: { quantity },
+      });
+      return NextResponse.json(updated);
+    }
+  } catch (error) {
+    console.error("Error updating product quantity:", error);
+    return NextResponse.json({ error: "Greška pri ažuriranju proizvoda" }, { status: 500 });
+  }
+}
