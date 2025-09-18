@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { useCart } from "./CartContext";
+import { useTranslation } from "react-i18next";
 
 interface AddToCartButtonProps {
   productId: string;
@@ -9,6 +10,7 @@ interface AddToCartButtonProps {
 const AddToCartButton: React.FC<AddToCartButtonProps> = ({ productId }) => {
   const [loading, setLoading] = React.useState(false);
   const { addToCart } = useCart();
+  const { t } = useTranslation("product");
 
   const handleAddToCart = async () => {
     setLoading(true);
@@ -16,7 +18,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({ productId }) => {
       await addToCart(productId, 1);
     } catch (err) {
       console.error("Add to cart error:", err);
-      alert("Greška pri dodavanju u korpu");
+      alert(t("addToCartError"));
     }
     setLoading(false);
   };
@@ -27,7 +29,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({ productId }) => {
       onClick={handleAddToCart}
       disabled={loading}
     >
-      {loading ? "Dodajem..." : "Add to Cart"}
+      {loading ? t("adding") : t("addToCart")}
     </button>
   );
 };
