@@ -1,6 +1,7 @@
 import { getProductById } from "@/actions/products";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import AddToCartButton from "@/components/AddToCartButton";
 
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -20,6 +21,8 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
         </div>
       )}
       <p className="text-2xl text-green-600 mt-4">{product.price} EUR</p>
+      <p className="text-2xl text-green-600 mt-4">{product.quantity} kom.</p>
+      <AddToCartButton productId={product.id} />
     </div>
   );
 }

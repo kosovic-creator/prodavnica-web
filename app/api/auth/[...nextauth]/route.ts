@@ -52,13 +52,15 @@ const authOptions = {
     async jwt({ token, user }: any) {
       if (user) {
         token.role = user.role;
+        token.id = user.id;
+        token.sub = user.id;
       }
       return token;
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async session({ session, token }: any) {
       if (token) {
-        session.user.id = token.sub;
+        session.user.id = token.id || token.sub;
         session.user.role = token.role;
       }
       return session;

@@ -84,7 +84,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
     <nav className="flex items-center justify-between p-4 bg-gray-100">
       {/* Hamburger na lijevoj strani */}
       <div className="flex items-center gap-4">
-        {!!session && (
+        {!!session && session.user.role !== 'admin' && (
           <button
             onClick={() => setSidebarOpen(true)}
             className="text-gray-700 hover:text-gray-900"
@@ -146,7 +146,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
             )}
           </div>
         )}
-        {session && (
+        {session && session.user.role !== 'admin' && (
           <>
             <Link
               href="/cart"
@@ -178,7 +178,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
           🇲🇪
         </button>
       </div>
-      {sidebarOpen && (
+      {sidebarOpen && session && session.user.role !== 'admin' && (
         <Sidebar
           onClose={() => setSidebarOpen(false)}
           isAuthenticated={!!session}

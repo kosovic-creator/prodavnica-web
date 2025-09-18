@@ -157,7 +157,7 @@ export default function ProductsPage() {
                 )}
                 <div className="p-4">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    <Link href={`/products/${product.id}`} className="hover:underline">
+                    <Link href={`/products/id/${product.id}`} className="hover:underline">
                       {product.name}
                     </Link>
                   </h3>

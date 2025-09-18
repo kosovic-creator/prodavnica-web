@@ -55,9 +55,9 @@ export async function POST(req: NextRequest) {
     });
 
     // Pošalji email korisniku
-    // if (userEmail) {
-    //   await sendConfirmationEmail(userEmail, finalAmount);
-    // }
+    if (userEmail) {
+      await sendConfirmationEmail(userEmail, finalAmount);
+    }
 
     // Ažuriraj status porudžbine na 'completed'
     await prisma.order.update({

@@ -35,9 +35,9 @@ export async function PUT(
     const cartItem = await prisma.cartItem.updateMany({
       where: {
         id: id,
-        userId: user.id
+        userId: user.id,
       },
-      data: { quantity }
+      data: { quantity, updatedAt: new Date() }
     });
 
     if (cartItem.count === 0) {

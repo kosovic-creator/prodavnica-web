@@ -8,6 +8,7 @@ export interface Product {
   id: string;
   name: string;
   price: number;
+  quantity: number;
   image?: string;
   createdAt: string;
   updatedAt: string;
@@ -23,12 +24,22 @@ export async function getProductByName(name: string): Promise<Product | null> {
         mode: "insensitive", // nije bitno veliko/malo slovo
       },
     },
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      quantity: true,
+      image: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
   if (!product) return null;
   return {
     id: product.id,
     name: product.name,
     price: product.price,
+    quantity: product.quantity,
     image: product.image === null ? undefined : product.image,
     createdAt: product.createdAt.toISOString(),
     updatedAt: product.updatedAt.toISOString(),
