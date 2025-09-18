@@ -52,11 +52,18 @@ export async function GET() {
 // POST - Add item to cart
 export async function POST(request: Request) {
   try {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     console.log("SESSION:", session);
-    if (!session?.user?.id) {
+    if (!session?.user?.email) {
       console.log("Niste prijavljeni");
       return NextResponse.json({ error: "Niste prijavljeni" }, { status: 401 });
+    }
+    // Find user by email
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email }
+    });
+    if (!user) {
+      return NextResponse.json({ error: "Korisnik nije pronađen" }, { status: 404 });
     }
     const { productId, quantity } = await request.json();
     console.log("productId:", productId, "quantity:", quantity);
@@ -68,7 +75,7 @@ export async function POST(request: Request) {
     const cartItem = await prisma.cartItem.upsert({
       where: {
         userId_productId: {
-          userId: session.user.id,
+          userId: user.id,
           productId,
         },
       },
@@ -76,7 +83,7 @@ export async function POST(request: Request) {
         quantity: { increment: quantity },
       },
       create: {
-        userId: session.user.id,
+        userId: user.id,
         productId,
         quantity,
       },

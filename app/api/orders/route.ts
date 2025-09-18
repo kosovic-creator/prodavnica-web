@@ -52,16 +52,26 @@ export async function POST() {
 
       // Create order items
       const orderItems = await Promise.all(
-        cartItems.map((cartItem) =>
-          tx.orderItem.create({
+        cartItems.map(async (cartItem) => {
+          const orderItem = await tx.orderItem.create({
             data: {
               orderId: newOrder.id,
               productId: cartItem.productId,
               quantity: cartItem.quantity,
               price: cartItem.product.price,
             },
-          })
-        )
+          });
+          // Smanji količinu proizvoda
+          await tx.product.update({
+            where: { id: cartItem.productId },
+            data: {
+              quantity: {
+                decrement: cartItem.quantity,
+              },
+            },
+          });
+          return orderItem;
+        })
       );
 
       // Clear cart
