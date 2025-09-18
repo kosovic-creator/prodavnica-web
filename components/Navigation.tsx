@@ -122,14 +122,14 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
                   href="/login"
                   className="flex items-center gap-2 text-green-700 hover:text-green-500 px-3 py-2 rounded-md transition duration-200"
                 >
-                  <ArrowLeftOnRectangleIcon className="h-5 w-5" />
+                  <ArrowLeftOnRectangleIcon className="h-5 w-5 hidden" />
                   {tNav("login")}
                 </Link>
                 <Link
                   href="/register"
                   className="flex items-center gap-2 text-blue-950 px-3 py-2 rounded-md transition duration-200"
                 >
-                  <PlusCircleIcon className="h-5 w-5" />
+                  <PlusCircleIcon className="h-5 w-5 hidden" />
                   {tNav("register")}
                 </Link>
               </>
@@ -139,7 +139,7 @@ export default function Navigation({ onSidebarChange }: NavigationProps) {
                   onClick={handleLogout}
                   className="flex items-center gap-2 text-red-700 px-3 py-2 rounded-md transition duration-200"
                 >
-                  <ArrowRightOnRectangleIcon className="h-5 w-5" />
+                  <ArrowRightOnRectangleIcon className="h-5 w-5 hidden" />
                   {tNav("logout")}
                 </button>
               </>
